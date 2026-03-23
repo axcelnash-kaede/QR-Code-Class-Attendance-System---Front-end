@@ -1,0 +1,155 @@
+﻿@page "/register"
+@inject HttpClient http
+@inject NavigationManager nav
+
+<div class="main-container">
+
+    <div class="login-box">
+
+        <div class="left-side">
+            <h1>QR Classroom Attendance</h1>
+            <img src="aclc.png" class="logo-img" />
+        </div>
+
+        <div class="right-side">
+
+            <h1>CREATE ACCOUNT</h1>
+
+            <MudTextField T="string"
+                          Label="Username"
+                          @bind-Value="username"
+                          Variant="Variant.Outlined"
+                          FullWidth="true" />
+
+            <MudTextField T="string"
+                          Label="Password"
+                          @bind-Value="password"
+                          InputType="InputType.Password"
+                          Variant="Variant.Outlined"
+                          FullWidth="true" />
+
+            <MudTextField T="string"
+                          Label="Confirm Password"
+                          @bind-Value="confirmPassword"
+                          InputType="InputType.Password"
+                          Variant="Variant.Outlined"
+                          FullWidth="true" />
+
+            <div class="btn-group">
+
+                <MudButton OnClick="HandleRegister"
+                           Variant="Variant.Filled"
+                           FullWidth="true"
+                           Class="login-btn">
+                    Register
+                </MudButton>
+
+                <MudButton OnClick="@(() => nav.NavigateTo("/login"))"
+                           Variant="Variant.Outlined"
+                           FullWidth="true"
+                           Class="register-btn">
+                    Back to Login
+                </MudButton>
+
+            </div>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <p class="@messageClass">@message</p>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private string username;
+    private string password;
+    private string confirmPassword;
+    private string message;
+    private string messageClass;
+
+    private async Task HandleRegister()
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            message = "Please fill all fields";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (password != confirmPassword)
+        {
+            message = "Passwords do not match";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (password.Length < 10 || password.Length > 12)
+        {
+            message = "Password must be 10–12 characters long";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (!password.Any(char.IsUpper))
+        {
+            message = "Password must contain at least 1 uppercase letter";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            message = "Password must contain at least 1 special character";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (password.ToLower().Contains(username.ToLower()))
+        {
+            message = "Password should not be similar to username";
+            messageClass = "error-msg";
+            return;
+        }
+
+        var data = new
+        {
+            username = username,
+            password = password
+        };
+
+        try
+        {
+            var response = await http.PostAsJsonAsync("https://localhost:5001/api/register", data);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+                message = result.message;
+
+                if (result.success)
+                {
+                    await Task.Delay(1000);
+                    nav.NavigateTo("/login");
+                }
+            }
+            else
+            {
+                message = "Server error";
+            }
+        }
+        catch
+        {
+            message = "Cannot connect to server";
+        }
+    }
+
+    public class ApiResponse
+    {
+        public bool success { get; set; }
+        public string message { get; set; }
+    }
+}

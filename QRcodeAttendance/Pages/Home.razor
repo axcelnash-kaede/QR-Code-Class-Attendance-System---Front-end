@@ -1,0 +1,59 @@
+﻿@page "/"
+@page "/login"
+@inject NavigationManager nav
+
+<div class="main-container">
+
+    <div class="login-box">
+
+        
+        <div class="left-side">
+            <h1>
+                QR Classroom <br />
+                Attendance
+            </h1>
+            <img src="aclc.png" class="logo-img" />
+        </div>
+
+        
+        <div class="right-side">
+
+            <h1>LOGIN TO CONTINUE</h1>
+
+            <MudTextField T="string"
+                          Label="Username"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          FullWidth="true" />
+
+            <MudTextField T="string"
+                          Label="Password"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Margin="Margin.Dense"
+                          FullWidth="true" />
+
+            
+            <div class="btn-group">
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Class="login-btn">
+                    LOGIN
+                </MudButton>
+
+                <MudButton OnClick="@(() => nav.NavigateTo("/register"))"
+                           Variant="Variant.Outlined"
+                           FullWidth="true"
+                           Class="register-btn">
+                    CREATE ACCOUNT
+                </MudButton>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

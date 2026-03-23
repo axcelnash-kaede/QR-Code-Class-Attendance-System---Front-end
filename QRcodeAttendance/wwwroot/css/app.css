@@ -1,0 +1,201 @@
+
+.main-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #BBDEFB;
+}
+
+
+.login-box {
+    width: 1110px;
+    height: 650px;
+    display: flex;
+    border: 5px solid #64B5F6;
+    background: white;
+}
+
+.left-side {
+    width: 70%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center; 
+    padding-top: 30px;
+    border-right: 3px solid #64B5F6;
+}
+
+    .left-side h1 {
+        font-size: 50px;
+        color: #1976D2;
+        text-align: center;
+        margin-bottom: 5px;
+        margin-top: 10px;
+    }
+
+
+.logo-img {
+    width: 250px;
+    height: auto;
+    margin-top: 80px;
+}
+
+
+.right-side {
+    width: 50%;
+    padding: 40px;
+    color: white;
+}
+
+    .right-side h1 {
+        font-size: 38px;
+        margin: 0;
+        font-family: "Times New Roman", serif;
+        color: black;
+        margin-bottom: 25px;
+    }
+
+   
+
+.mud-input-root {
+    color: black !important;
+    font-size: 14px !important;
+    
+}
+
+.mud-text-field {
+    margin-bottom: 25px !important;
+}
+
+.mud-input-control .mud-input-slot {
+    border: 2px solid #1976D2 !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+}
+
+.mud-input-root {
+    color: black !important;
+    font-size: 20px !important;
+}
+
+.mud-input-label {
+    color: black !important;
+}
+
+.mud-text-field {
+    margin-bottom: 30px !important; 
+}
+
+
+.mud-input-slot {
+    height: 45px !important; 
+    border-radius: 8px !important; 
+}
+
+
+.mud-input-root {
+    font-size: 25px !important;
+}
+
+
+.mud-input-control .mud-input-slot {
+    border: 2px solid #1976D2 !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+}
+
+.mud-input-control.mud-input-focused .mud-input-slot {
+    border: 2px solid #0D47A1 !important; 
+}
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.login-btn {
+    height: 55px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    background: #1976D2 !important;
+    color: white !important;
+    transition: 0.3s;
+}
+    .login-btn:hover {
+        background: #0D47A1 !important;
+        transform: scale(1.02);
+    }
+
+.register-btn {
+    margin-top: 12px;
+    height: 55px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 2px solid #1976D2 !important;
+    transition: 0.3s;
+    color: #64B5F6 !important;
+}
+    .register-btn:hover {
+        background: #BBDEFB !important;
+        transform: scale(1.02);
+    }
+
+
+/* Register Dashboard */
+
+/* MESSAGE TEXT */
+.msg {
+    margin-top: 15px;
+    color: #1976D2;
+    font-weight: bold;
+}
+
+/* BUTTON GROUP (fix spacing) */
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* REGISTER BUTTON STYLE */
+.register-btn {
+    height: 55px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 2px solid #1976D2 !important;
+    color: #1976D2 !important;
+    background: white !important;
+}
+
+    .register-btn:hover {
+        background: #BBDEFB !important;
+    }
+
+/* MAIN REGISTER BUTTON */
+.login-btn {
+    height: 55px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    background: #1976D2 !important;
+    color: white !important;
+}
+
+    .login-btn:hover {
+        background: #0D47A1 !important;
+    }
+/* Error Messages */
+.error-msg {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.success-msg {
+    color: #2e7d32;
+    font-weight: bold;
+    margin-top: 10px;
+}
