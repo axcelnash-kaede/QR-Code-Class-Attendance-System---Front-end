@@ -18,22 +18,28 @@
             <MudTextField T="string"
                           Label="Username"
                           @bind-Value="username"
-                          Variant="Variant.Outlined"
+                          Variant="Variant.Text"
                           FullWidth="true" />
 
             <MudTextField T="string"
                           Label="Password"
                           @bind-Value="password"
-                          InputType="InputType.Password"
-                          Variant="Variant.Outlined"
-                          FullWidth="true" />
+                          InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                          Variant="Variant.Text"
+                          FullWidth="true"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                          OnAdornmentClick="@(() => showPassword = !showPassword)" />
 
             <MudTextField T="string"
                           Label="Confirm Password"
                           @bind-Value="confirmPassword"
-                          InputType="InputType.Password"
-                          Variant="Variant.Outlined"
-                          FullWidth="true" />
+                          InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
+                          Variant="Variant.Text"
+                          FullWidth="true"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                          OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
 
             <div class="btn-group">
 
@@ -70,6 +76,8 @@
     private string confirmPassword;
     private string message;
     private string messageClass;
+    bool showPassword = false;
+    bool showConfirmPassword = false;
 
     private async Task HandleRegister()
     {
@@ -132,8 +140,13 @@
 
                 if (result.success)
                 {
-                    await Task.Delay(1000);
-                    nav.NavigateTo("/login");
+                    messageClass = "success-msg";
+                    message = result.message;
+
+                    
+                    await Task.Delay(1200);
+
+                    nav.NavigateTo("/login", true); 
                 }
             }
             else

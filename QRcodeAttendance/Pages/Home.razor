@@ -22,13 +22,13 @@
 
             <MudTextField T="string"
                           Label="Username"
-                          Variant="Variant.Outlined"
+                          Variant="Variant.Text"
                           Margin="Margin.Dense"
                           FullWidth="true" />
 
             <MudTextField T="string"
                           Label="Password"
-                          Variant="Variant.Outlined"
+                          Variant="Variant.Text"
                           InputType="InputType.Password"
                           Margin="Margin.Dense"
                           FullWidth="true" />
@@ -57,3 +57,6 @@
     </div>
 
 </div>
+@code {
+    bool showPassword = false;
+}

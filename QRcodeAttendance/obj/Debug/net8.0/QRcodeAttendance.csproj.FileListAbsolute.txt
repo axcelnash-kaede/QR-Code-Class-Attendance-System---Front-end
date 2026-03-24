@@ -1048,6 +1048,7 @@ C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debu
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\wp6934tnxr-5z90s42y4u.gz
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\gtey8m5rcl-47li9wjxov.gz
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\t9i283pio8-fb7l8s9hmt.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-nto2isg4za.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-r852bjgrf2.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-mioyj8yjyg.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.sourcelink.json
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-8f0o26gvcx.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-dfa59qu5uo.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-ypw41rljyl.gz

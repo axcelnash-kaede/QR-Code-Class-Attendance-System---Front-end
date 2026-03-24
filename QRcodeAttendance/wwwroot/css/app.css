@@ -7,7 +7,6 @@
     background: #BBDEFB;
 }
 
-
 .login-box {
     width: 1110px;
     height: 650px;
@@ -47,66 +46,40 @@
     padding: 40px;
     color: white;
 }
-
-    .right-side h1 {
-        font-size: 38px;
-        margin: 0;
-        font-family: "Times New Roman", serif;
-        color: black;
-        margin-bottom: 25px;
+ .right-side h1 {
+     font-size: 38px;
+     margin: 0;
+     font-family: "Times New Roman", serif;
+     color: black;
+     margin-bottom: 25px;
     }
-
-   
-
-.mud-input-root {
-    color: black !important;
-    font-size: 14px !important;
-    
-}
-
-.mud-text-field {
-    margin-bottom: 25px !important;
-}
-
-.mud-input-control .mud-input-slot {
-    border: 2px solid #1976D2 !important;
-    border-radius: 8px !important;
-    background-color: white !important;
-}
 
 .mud-input-root {
     color: black !important;
     font-size: 20px !important;
 }
 
-.mud-input-label {
-    color: black !important;
-}
-
 .mud-text-field {
-    margin-bottom: 30px !important; 
+    margin-bottom: 30px !important;
 }
-
-
-.mud-input-slot {
-    height: 45px !important; 
-    border-radius: 8px !important; 
-}
-
-
-.mud-input-root {
-    font-size: 25px !important;
-}
-
 
 .mud-input-control .mud-input-slot {
     border: 2px solid #1976D2 !important;
     border-radius: 8px !important;
     background-color: white !important;
+    padding: 12px !important;
+}
+
+.mud-input-label {
+    color: #1976D2 !important;
+}
+
+.mud-text-field {
+    margin-bottom: 25px !important;
 }
 
 .mud-input-control.mud-input-focused .mud-input-slot {
-    border: 2px solid #0D47A1 !important; 
+    border: 2px solid #0D47A1 !important;
 }
 .btn-group {
     margin-top: 25px;
@@ -142,17 +115,14 @@
         transform: scale(1.02);
     }
 
-
 /* Register Dashboard */
 
-/* MESSAGE TEXT */
 .msg {
     margin-top: 15px;
     color: #1976D2;
     font-weight: bold;
 }
 
-/* BUTTON GROUP (fix spacing) */
 .btn-group {
     margin-top: 25px;
     display: flex;
@@ -160,7 +130,6 @@
     gap: 15px;
 }
 
-/* REGISTER BUTTON STYLE */
 .register-btn {
     height: 55px;
     font-size: 16px;
@@ -174,7 +143,6 @@
         background: #BBDEFB !important;
     }
 
-/* MAIN REGISTER BUTTON */
 .login-btn {
     height: 55px;
     font-size: 18px;
@@ -187,7 +155,6 @@
     .login-btn:hover {
         background: #0D47A1 !important;
     }
-/* Error Messages */
 .error-msg {
     color: #d32f2f;
     font-weight: bold;
