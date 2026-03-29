@@ -1,0 +1,121 @@
+﻿@page "/main_dashboard"
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Web
+
+<MudGrid Class="pa-4" AlignItems="Stretch">
+
+    <!-- LEFT PANEL -->
+    <MudItem xs="12" md="3" Class="d-flex">
+        <MudPaper Class="pa-3 sidebar full-height">
+
+            <MudText Typo="Typo.h6">My Sections</MudText>
+
+            <MudExpansionPanels>
+                @foreach (var sec in sections)
+                {
+                    <MudExpansionPanel Text="@sec.Name">
+
+                        @foreach (var subject in sec.Subjects)
+                        {
+                            <MudButton FullWidth="true"
+                                       Class="subject-btn"
+                                       OnClick="@(() => LoadAttendance(sec.Name, subject))">
+                                @subject
+                            </MudButton>
+                        }
+
+                    </MudExpansionPanel>
+                }
+            </MudExpansionPanels>
+
+        </MudPaper>
+    </MudItem>
+
+    <!-- RIGHT PANEL -->
+    <MudItem xs="12" md="9" Class="d-flex">
+        <MudPaper Class="pa-4 main-panel full-height">
+            <MudText Typo="Typo.h6" Class="mb-2"> @selectedSection - @selectedSubject </MudText>
+            <div class="action-bar">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                    Generate QR
+                </MudButton>
+
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary">
+                    Print PDF
+                </MudButton>
+            </div>
+
+            <MudTable T="Attendance"
+                      Items="@attendanceList"
+                      Dense="true"
+                      Class="mt-4"
+                      Style="width:100%"
+                      FixedHeader="true"
+                      Height="400px">
+
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Status</MudTh>
+                    <MudTh>Time</MudTh>
+                </HeaderContent>
+
+                <RowTemplate Context="row">
+                    <MudTd>@row.Name</MudTd>
+                    <MudTd>@row.Status</MudTd>
+                    <MudTd>@row.Time</MudTd>
+                </RowTemplate>
+
+            </MudTable>
+
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    string selectedSection = "";
+    string selectedSubject = "";
+
+    public class Section
+    {
+        public string Name { get; set; }
+        public List<string> Subjects { get; set; }
+    }
+
+    public class Attendance
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
+        public string Time { get; set; }
+    }
+
+    List<Section> sections = new()
+    {
+        new Section
+        {
+            Name = "BSIT 1A",
+            Subjects = new List<string> { "Programming", "Math" }
+        },
+        new Section
+        {
+            Name = "BSIT 2B",
+            Subjects = new List<string> { "Database", "Networking" }
+        }
+    };
+
+    List<Attendance> attendanceList = new();
+
+    void LoadAttendance(string section, string subject)
+    {
+        selectedSection = section;
+        selectedSubject = subject;
+
+        attendanceList = new List<Attendance>
+    {
+        new Attendance { Name = "Juan Dela Cruz", Status = "Present", Time = "8:01 AM" },
+        new Attendance { Name = "Maria Santos", Status = "Late", Time = "8:15 AM" }
+    };
+    }
+}
+    

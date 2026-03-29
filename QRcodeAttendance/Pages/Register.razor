@@ -16,26 +16,26 @@
             <h1>CREATE ACCOUNT</h1>
 
             <MudTextField T="string"
-                          Label="Username"
+                          Placeholder="Username"
                           @bind-Value="username"
-                          Variant="Variant.Text"
+                          Variant="Variant.Outlined"
                           FullWidth="true" />
 
             <MudTextField T="string"
-                          Label="Password"
+                          Placeholder="Password"
                           @bind-Value="password"
+                          Variant="Variant.Outlined"
                           InputType="@(showPassword ? InputType.Text : InputType.Password)"
-                          Variant="Variant.Text"
                           FullWidth="true"
                           Adornment="Adornment.End"
                           AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                           OnAdornmentClick="@(() => showPassword = !showPassword)" />
 
             <MudTextField T="string"
-                          Label="Confirm Password"
+                          Placeholder="Confirm Password"
                           @bind-Value="confirmPassword"
+                          Variant="Variant.Outlined"
                           InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
-                          Variant="Variant.Text"
                           FullWidth="true"
                           Adornment="Adornment.End"
                           AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"

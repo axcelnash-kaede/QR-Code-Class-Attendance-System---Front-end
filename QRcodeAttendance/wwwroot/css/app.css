@@ -9,7 +9,7 @@
 
 .login-box {
     width: 1110px;
-    height: 650px;
+    min-height: 650px;
     display: flex;
     border: 5px solid #64B5F6;
     background: white;
@@ -45,6 +45,9 @@
     width: 50%;
     padding: 40px;
     color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
  .right-side h1 {
      font-size: 38px;
@@ -53,40 +56,37 @@
      color: black;
      margin-bottom: 25px;
     }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.mud-text-field {
+    margin-bottom: 5px !important;
+}
 
 .mud-input-root {
     color: black !important;
-    font-size: 20px !important;
+    font-size: 16px !important;
 }
 
-.mud-text-field {
-    margin-bottom: 30px !important;
-}
 
-.mud-input-control .mud-input-slot {
-    border: 2px solid #1976D2 !important;
+.mud-input-outlined .mud-input-outlined-border {
+    border-color: #1976D2 !important;
+    border-width: 2px !important;
     border-radius: 8px !important;
-    background-color: white !important;
-    padding: 12px !important;
 }
 
-.mud-input-label {
+
+.mud-input-outlined.mud-input-focused .mud-input-outlined-border {
+    border-color: #0D47A1 !important;
+}
+
+.mud-input-adornment {
     color: #1976D2 !important;
 }
 
-.mud-text-field {
-    margin-bottom: 25px !important;
-}
-
-.mud-input-control.mud-input-focused .mud-input-slot {
-    border: 2px solid #0D47A1 !important;
-}
-.btn-group {
-    margin-top: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
 .login-btn {
     height: 55px;
     font-size: 18px;
@@ -95,14 +95,15 @@
     background: #1976D2 !important;
     color: white !important;
     transition: 0.3s;
+    margin-top: 5px;
 }
-    .login-btn:hover {
-        background: #0D47A1 !important;
-        transform: scale(1.02);
-    }
+.login-btn:hover {
+    background: #0D47A1 !important;
+    transform: scale(1.02);
+}
 
 .register-btn {
-    margin-top: 12px;
+    margin-top: 5px;
     height: 55px;
     font-size: 16px;
     border-radius: 12px;
@@ -110,52 +111,12 @@
     transition: 0.3s;
     color: #64B5F6 !important;
 }
-    .register-btn:hover {
-        background: #BBDEFB !important;
-        transform: scale(1.02);
-    }
-
-/* Register Dashboard */
+.register-btn:hover {
+    background: #BBDEFB !important;
+    transform: scale(1.02);
+}
 
 .msg {
-    margin-top: 15px;
-    color: #1976D2;
-    font-weight: bold;
-}
-
-.btn-group {
-    margin-top: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.register-btn {
-    height: 55px;
-    font-size: 16px;
-    border-radius: 12px;
-    border: 2px solid #1976D2 !important;
-    color: #1976D2 !important;
-    background: white !important;
-}
-
-    .register-btn:hover {
-        background: #BBDEFB !important;
-    }
-
-.login-btn {
-    height: 55px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 12px;
-    background: #1976D2 !important;
-    color: white !important;
-}
-
-    .login-btn:hover {
-        background: #0D47A1 !important;
-    }
-.error-msg {
     color: #d32f2f;
     font-weight: bold;
     margin-top: 10px;
@@ -165,4 +126,59 @@
     color: #2e7d32;
     font-weight: bold;
     margin-top: 10px;
+}
+
+.mud-input-adornment {
+    color: #1976D2 !important;
+    cursor: pointer;
+}
+
+/*Main Dashboard*/
+
+.full-height {
+    height: 920px;
+    width: 100%;
+}
+
+
+.sidebar {
+    border: 5px solid #1976D2;
+    background: white;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+.main-panel {
+    border: 10px solid #1976D2;
+    background: white;
+    border-radius: 10px;
+    margin-left: 10px;
+    
+}
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.subject-btn {
+    margin: 5px 0;
+    justify-content: flex-start;
+}
+
+.mud-table {
+    border: 1px solid #ddd;
+}
+
+.mud-table th,
+.mud-table td {
+        border-bottom: 1px solid #ddd;
+}
+.mud-grid {
+    margin: 0 !important;
+}
+
+.mud-item {
+    padding: 0 !important;
 }

@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "QRcodeAttendance",
   "resources": {
-    "hash": "sha256-YSKlhJ9K0iE0MjgN+YT4rao+5oaH5TCXDuEbowDmF3Y=",
+    "hash": "sha256-b9u1mXrZaMKApDl0EtS9Fj18GyWjpwWHAJyr+dXZAGY=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-NljIbpK/1KCj0+knpX8U77Rbl5kTtfFIuFjK7AuczEw="
     },
@@ -212,10 +212,10 @@
       "mscorlib.wasm": "sha256-oV7k+vcNqj7FS6Y/lMtdhVlq3myDH55/wVxmO4QPrw4=",
       "netstandard.wasm": "sha256-XMXMB0WW//vbNNgQiFAqYo7IJ2C4yQX590aoAbOtTB4=",
       "System.Private.CoreLib.wasm": "sha256-tuhzUgbFn7ji3yhMSxyBLHAps9h0RsFnq+8pUoizHiw=",
-      "QRcodeAttendance.wasm": "sha256-JPKOvWKctipDWbbNKqAu9PoB4AUpvJ4J7+gdmjAMPR0="
+      "QRcodeAttendance.wasm": "sha256-vE6PfeCQnZpyz7wdOrKRZvQZEPsTlGvrCWra/uvvpiw="
     },
     "pdb": {
-      "QRcodeAttendance.pdb": "sha256-98q3AXWfDSeJlhqNSZqY2x5RxMr+c5Gdq4375vPFyWM="
+      "QRcodeAttendance.pdb": "sha256-1LgJa9HOwTDYr+mTSh2PZUwLbsCk4DFAJbDP2apiyh0="
     }
   },
   "cacheBootResources": true,

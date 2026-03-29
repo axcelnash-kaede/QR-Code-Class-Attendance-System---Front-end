@@ -35,12 +35,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Main_Dashbaord.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbl9EYXNoYmFvcmQucmF6b3I=
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Main_Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbl9EYXNoYm9hcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Register.razor]

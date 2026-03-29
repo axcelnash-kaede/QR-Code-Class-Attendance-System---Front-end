@@ -1,6 +1,8 @@
 ﻿@page "/"
 @page "/login"
 @inject NavigationManager nav
+@using MudBlazor
+
 
 <div class="main-container">
 
@@ -15,26 +17,28 @@
             <img src="aclc.png" class="logo-img" />
         </div>
 
-        
+
         <div class="right-side">
 
             <h1>LOGIN TO CONTINUE</h1>
 
-            <MudTextField T="string"
-                          Label="Username"
-                          Variant="Variant.Text"
-                          Margin="Margin.Dense"
-                          FullWidth="true" />
+            <div class="form-group">
 
-            <MudTextField T="string"
-                          Label="Password"
-                          Variant="Variant.Text"
-                          InputType="InputType.Password"
-                          Margin="Margin.Dense"
-                          FullWidth="true" />
+                <MudTextField T="string"
+                              Placeholder="Username"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Class="input-field" />
 
-            
-            <div class="btn-group">
+                <MudTextField T="string"
+                              Placeholder="Password"
+                              Variant="Variant.Outlined"
+                              InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                              FullWidth="true"
+                              Class="input-field"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                              OnAdornmentClick="@(() => showPassword = !showPassword)" />
 
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Primary"
