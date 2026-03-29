@@ -1049,6 +1049,6 @@ C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debu
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\refint\QRcodeAttendance.dll
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.pdb
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\ref\QRcodeAttendance.dll
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-grqpf7xc6o.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-0jo8xy1emn.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-0qke0hlhjm.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-2fvufrnw27.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-vf3q0j43zh.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-8jqmm0jfq0.gz

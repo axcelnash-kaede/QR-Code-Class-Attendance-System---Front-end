@@ -2,7 +2,7 @@
 @inject HttpClient http
 @inject NavigationManager nav
 
-<div class="main-container">
+<div class="main-container register-page">
 
     <div class="login-box">
 
@@ -15,32 +15,37 @@
 
             <h1>CREATE ACCOUNT</h1>
 
-            <MudTextField T="string"
-                          Placeholder="Username"
-                          @bind-Value="username"
-                          Variant="Variant.Outlined"
-                          FullWidth="true" />
+            <div class="form-group">
 
-            <MudTextField T="string"
-                          Placeholder="Password"
-                          @bind-Value="password"
-                          Variant="Variant.Outlined"
-                          InputType="@(showPassword ? InputType.Text : InputType.Password)"
-                          FullWidth="true"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                          OnAdornmentClick="@(() => showPassword = !showPassword)" />
+                <MudTextField T="string"
+                              Placeholder="Username"
+                              @bind-Value="username"
+                              Variant="Variant.Outlined"
+                              FullWidth="true" />
 
-            <MudTextField T="string"
-                          Placeholder="Confirm Password"
-                          @bind-Value="confirmPassword"
-                          Variant="Variant.Outlined"
-                          InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
-                          FullWidth="true"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                          OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
+                <MudTextField T="string"
+                              Placeholder="Password"
+                              @bind-Value="password"
+                              Variant="Variant.Outlined"
+                              InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                              FullWidth="true"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                              OnAdornmentClick="@(() => showPassword = !showPassword)" />
 
+                <MudTextField T="string"
+                              Placeholder="Confirm Password"
+                              @bind-Value="confirmPassword"
+                              Variant="Variant.Outlined"
+                              InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
+                              FullWidth="true"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                              OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
+
+            </div>
+
+           
             <div class="btn-group">
 
                 <MudButton OnClick="HandleRegister"

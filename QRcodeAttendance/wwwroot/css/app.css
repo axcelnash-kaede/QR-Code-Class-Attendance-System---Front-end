@@ -83,10 +83,6 @@
     border-color: #0D47A1 !important;
 }
 
-.mud-input-adornment {
-    color: #1976D2 !important;
-}
-
 .login-btn {
     height: 55px;
     font-size: 18px;
@@ -122,7 +118,7 @@
     margin-top: 10px;
 }
 
-.success-msg {
+.register-page .success-msg {
     color: #2e7d32;
     font-weight: bold;
     margin-top: 10px;
@@ -133,6 +129,28 @@
     cursor: pointer;
 }
 
+.register-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.register-page .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.register-page .mud-text-field {
+    margin-bottom: 0 !important;
+}
+
+.register-page .login-btn,
+.register-page .register-btn {
+    width: 100%;
+    margin-top: 0;
+}
 /*Main Dashboard*/
 
 .full-height {
