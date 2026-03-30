@@ -14,7 +14,7 @@
         <div class="right-side">
 
             <h1>CREATE ACCOUNT</h1>
-
+            <MudForm @ref="form">
             <div class="form-group">
 
                 <MudTextField T="string"
@@ -44,7 +44,7 @@
                               OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
 
             </div>
-
+            </MudForm>
            
             <div class="btn-group">
 
@@ -81,11 +81,17 @@
     private string confirmPassword;
     private string message;
     private string messageClass;
+    MudForm form;
     bool showPassword = false;
     bool showConfirmPassword = false;
 
     private async Task HandleRegister()
     {
+        await form.Validate();
+
+        if (!form.IsValid)
+            return;
+
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
         {
             message = "Please fill all fields";
