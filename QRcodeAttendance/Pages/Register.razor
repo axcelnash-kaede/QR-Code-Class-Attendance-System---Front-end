@@ -17,31 +17,38 @@
             <MudForm @ref="form">
             <div class="form-group">
 
-                <MudTextField T="string"
-                              Placeholder="Username"
-                              @bind-Value="username"
-                              Variant="Variant.Outlined"
-                              FullWidth="true" />
+                    <MudTextField T="string"
+                                  Placeholder="Username"
+                                  @bind-Value="username"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Required="true"
+                                  RequiredError="Username is required" />
 
-                <MudTextField T="string"
-                              Placeholder="Password"
-                              @bind-Value="password"
-                              Variant="Variant.Outlined"
-                              InputType="@(showPassword ? InputType.Text : InputType.Password)"
-                              FullWidth="true"
-                              Adornment="Adornment.End"
-                              AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                              OnAdornmentClick="@(() => showPassword = !showPassword)" />
+                    <MudTextField T="string"
+                                  Placeholder="Password"
+                                  @bind-Value="password"
+                                  Variant="Variant.Outlined"
+                                  InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                                  FullWidth="true"
+                                  Required="true"
+                                  RequiredError="Password is required"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                                  OnAdornmentClick="@(() => showPassword = !showPassword)" />
 
-                <MudTextField T="string"
-                              Placeholder="Confirm Password"
-                              @bind-Value="confirmPassword"
-                              Variant="Variant.Outlined"
-                              InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
-                              FullWidth="true"
-                              Adornment="Adornment.End"
-                              AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                              OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
+                    <MudTextField T="string"
+                                  Placeholder="Confirm Password"
+                                  @bind-Value="confirmPassword"
+                                  Variant="Variant.Outlined"
+                                  InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)"
+                                  FullWidth="true"
+                                  Required="true"
+                                  RequiredError="Confirm your password"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                                  OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
+                                  Validation="@(new Func<string, string>(ValidateConfirmPassword))"
 
             </div>
             </MudForm>
@@ -84,6 +91,14 @@
     MudForm form;
     bool showPassword = false;
     bool showConfirmPassword = false;
+
+    private string ValidateConfirmPassword(string value)
+    {
+        if (value != password)
+            return "Passwords do not match";
+
+        return null;
+    }
 
     private async Task HandleRegister()
     {
