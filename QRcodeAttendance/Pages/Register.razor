@@ -14,7 +14,7 @@
         <div class="right-side">
 
             <h1>CREATE ACCOUNT</h1>
-            <MudForm @ref="form">
+            <MudForm @ref="form" Immediate="true">
             <div class="form-group">
 
                     <MudTextField T="string"
@@ -45,14 +45,15 @@
                                   FullWidth="true"
                                   Required="true"
                                   RequiredError="Confirm your password"
+                                  Validation="@(new Func<string, string>(ValidateConfirmPassword))"
                                   Adornment="Adornment.End"
                                   AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                                   OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
-                                  Validation="@(new Func<string, string>(ValidateConfirmPassword))"
+                                  
 
             </div>
             </MudForm>
-           
+
             <div class="btn-group">
 
                 <MudButton OnClick="HandleRegister"
@@ -91,7 +92,7 @@
     MudForm form;
     bool showPassword = false;
     bool showConfirmPassword = false;
-
+    
     private string ValidateConfirmPassword(string value)
     {
         if (value != password)
@@ -101,26 +102,7 @@
     }
 
     private async Task HandleRegister()
-    {
-        await form.Validate();
-
-        if (!form.IsValid)
-            return;
-
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-        {
-            message = "Please fill all fields";
-            messageClass = "error-msg";
-            return;
-        }
-
-        if (password != confirmPassword)
-        {
-            message = "Passwords do not match";
-            messageClass = "error-msg";
-            return;
-        }
-
+{
         if (password.Length < 10 || password.Length > 12)
         {
             message = "Password must be 10–12 characters long";
@@ -142,49 +124,46 @@
             return;
         }
 
-        if (password.ToLower().Contains(username.ToLower()))
-        {
-            message = "Password should not be similar to username";
-            messageClass = "error-msg";
-            return;
-        }
+    var data = new
+    {
+        username = username,
+        password = password
+    };
 
-        var data = new
-        {
-            username = username,
-            password = password
-        };
+    try
+    {
+        var response = await http.PostAsJsonAsync("https://localhost:5001/api/register", data);
 
-        try
+        if (response.IsSuccessStatusCode)
         {
-            var response = await http.PostAsJsonAsync("https://localhost:5001/api/register", data);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
 
-            if (response.IsSuccessStatusCode)
+            if (result.success)
             {
-                var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+                messageClass = "success-msg";
                 message = result.message;
 
-                if (result.success)
-                {
-                    messageClass = "success-msg";
-                    message = result.message;
-
-                    
-                    await Task.Delay(1200);
-
-                    nav.NavigateTo("/login", true); 
-                }
+                await Task.Delay(1200);
+                nav.NavigateTo("/login", true);
             }
             else
             {
-                message = "Server error";
+                message = result.message;
+                messageClass = "error-msg";
             }
         }
-        catch
+        else
         {
-            message = "Cannot connect to server";
+            message = "Server error";
+            messageClass = "error-msg";
         }
     }
+    catch
+    {
+        message = "Cannot connect to server";
+        messageClass = "error-msg";
+    }
+}
 
     public class ApiResponse
     {

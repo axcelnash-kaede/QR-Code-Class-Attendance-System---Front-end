@@ -22,26 +22,43 @@
 
             <h1>LOGIN TO CONTINUE</h1>
 
-            <div class="form-group">
+            <MudForm @ref="form" Immediate="true">
 
-                <MudTextField T="string"
-                              Placeholder="Username"
-                              Variant="Variant.Outlined"
-                              FullWidth="true"
-                              Class="input-field" />
+                <div class="form-group">
 
-                <MudTextField T="string"
-                              Placeholder="Password"
-                              Variant="Variant.Outlined"
-                              InputType="@(showPassword ? InputType.Text : InputType.Password)"
-                              FullWidth="true"
-                              Class="input-field"
-                              Adornment="Adornment.End"
-                              AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                              OnAdornmentClick="@(() => showPassword = !showPassword)" />
+                    <MudTextField T="string"
+                                  Placeholder="Username"
+                                  @bind-Value="username"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Required="true"
+                                  RequiredError="Username is required" />
 
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
+                    <MudTextField T="string"
+                                  Placeholder="Password"
+                                  @bind-Value="password"
+                                  Variant="Variant.Outlined"
+                                  InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                                  FullWidth="true"
+                                  Required="true"
+                                  RequiredError="Password is required"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                                  OnAdornmentClick="@(() => showPassword = !showPassword)" />
+
+                </div>
+
+            </MudForm>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <p class="@messageClass">@message</p>
+            }
+
+            <div class="btn-group">
+
+                <MudButton OnClick="HandleLogin"
+                           Variant="Variant.Filled"
                            FullWidth="true"
                            Class="login-btn">
                     LOGIN
@@ -63,4 +80,35 @@
 </div>
 @code {
     bool showPassword = false;
+    MudForm form;
+    string username;
+    string password;
+    string message;
+    string messageClass;
+
+    private async Task HandleLogin()
+    {
+        await form.Validate();
+
+        if (!form.IsValid)
+        {
+            message = "Please fix the errors above";
+            messageClass = "error-msg";
+            return;
+        }
+
+        // Simulated login (replace with API later)
+        if (username != "admin" || password != "admin123")
+        {
+            message = "Invalid username or password";
+            messageClass = "error-msg";
+            return;
+        }
+
+        message = "Login successful!";
+        messageClass = "success-msg";
+
+        await Task.Delay(1000);
+        nav.NavigateTo("/dashboard");
+    }
 }
