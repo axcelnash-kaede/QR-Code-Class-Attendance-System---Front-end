@@ -1,0 +1,96 @@
+﻿/* LOGIN PAGE */
+
+.main-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 1110px;
+    min-height: 650px;
+    display: flex;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* LEFT */
+.left-side {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #e0e0e0;
+    padding-top: 40px;
+    background: #f8fbff;
+}
+
+    .left-side h1 {
+        font-size: 42px;
+        font-weight: 700;
+        color: #0d47a1;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+/* LOGO */
+.logo-img {
+    width: 220px;
+    margin-top: 60px;
+}
+
+/* RIGHT */
+.right-side {
+    width: 50%;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .right-side h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 20px;
+    }
+
+/* FORM */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* BUTTONS */
+.btn-group {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-btn {
+    height: 52px;
+    font-weight: 600;
+    border-radius: 10px;
+    background: #1976d2 !important;
+    color: white !important;
+}
+
+    .login-btn:hover {
+        background: #0d47a1 !important;
+    }
+
+.register-btn {
+    height: 52px;
+    border-radius: 10px;
+    border: 1.8px solid #1976d2 !important;
+    color: #1976d2 !important;
+}
+
+    .register-btn:hover {
+        background: #e3f2fd !important;
+    }

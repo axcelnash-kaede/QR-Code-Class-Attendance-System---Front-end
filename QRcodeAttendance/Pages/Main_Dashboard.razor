@@ -1,76 +1,98 @@
 ﻿@page "/main_dashboard"
 @using MudBlazor
-@using Microsoft.AspNetCore.Components.Web
 
-<MudGrid Class="pa-4" AlignItems="Stretch">
+<div class="dashboard-wrapper">
 
-    <!-- LEFT PANEL -->
-    <MudItem xs="12" md="3" Class="d-flex">
-        <MudPaper Class="pa-3 sidebar full-height">
+    <div class="dashboard-container">
 
-            <MudText Typo="Typo.h6">My Sections</MudText>
+        <!-- SIDEBAR -->
+        <div class="sidebar">
 
-            <MudExpansionPanels>
-                @foreach (var sec in sections)
-                {
-                    <MudExpansionPanel Text="@sec.Name">
-
-                        @foreach (var subject in sec.Subjects)
-                        {
-                            <MudButton FullWidth="true"
-                                       Class="subject-btn"
-                                       OnClick="@(() => LoadAttendance(sec.Name, subject))">
-                                @subject
-                            </MudButton>
-                        }
-
-                    </MudExpansionPanel>
-                }
-            </MudExpansionPanels>
-
-        </MudPaper>
-    </MudItem>
-
-    <!-- RIGHT PANEL -->
-    <MudItem xs="12" md="9" Class="d-flex">
-        <MudPaper Class="pa-4 main-panel full-height">
-            <MudText Typo="Typo.h6" Class="mb-2"> @selectedSection - @selectedSubject </MudText>
-            <div class="action-bar">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">
-                    Generate QR
-                </MudButton>
-
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary">
-                    Print PDF
-                </MudButton>
+            <div class="sidebar-header">
+                <img src="aclc.png" class="sidebar-logo-img" />
+                <div class="sidebar-title">QR Classroom</div>
             </div>
 
-            <MudTable T="Attendance"
-                      Items="@attendanceList"
-                      Dense="true"
-                      Class="mt-4"
-                      Style="width:100%"
-                      FixedHeader="true"
-                      Height="400px">
+            <div class="sidebar-content">
+                <div class="section-title">Sections</div>
 
-                <HeaderContent>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Status</MudTh>
-                    <MudTh>Time</MudTh>
-                </HeaderContent>
+                <MudExpansionPanels Elevation="0">
+                    @foreach (var sec in sections)
+                    {
+                        <MudExpansionPanel Text="@sec.Name">
 
-                <RowTemplate Context="row">
-                    <MudTd>@row.Name</MudTd>
-                    <MudTd>@row.Status</MudTd>
-                    <MudTd>@row.Time</MudTd>
-                </RowTemplate>
+                            @foreach (var subject in sec.Subjects)
+                            {
+                                <MudButton FullWidth="true"
+                                           Class="subject-btn"
+                                           OnClick="@(() => LoadAttendance(sec.Name, subject))">
+                                    @subject
+                                </MudButton>
+                            }
 
-            </MudTable>
+                        </MudExpansionPanel>
+                    }
+                </MudExpansionPanels>
+            </div>
 
-        </MudPaper>
-    </MudItem>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Error"
+                       Class="logout-btn"
+                       OnClick="HandleLogout">
+                Log Out
+            </MudButton>
 
-</MudGrid>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-panel">
+
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="title">
+                    @(string.IsNullOrEmpty(selectedSection)
+                                        ? "Select a Section"
+                                        : $"{selectedSection} - {selectedSubject}")
+                </div>
+
+                <div class="action-bar">
+                    <MudButton Class="qr-btn">Generate QR</MudButton>
+                    <MudButton Class="pdf-btn">Print PDF</MudButton>
+                </div>
+            </div>
+
+            <!-- TABLE CARD -->
+            <div class="table-card">
+
+                <MudTable T="Attendance"
+                          Items="@attendanceList"
+                          Dense="true"
+                          FixedHeader="true"
+                          Height="100%"
+                          Bordered="true"
+                          Striped="true">
+
+                    <HeaderContent>
+                        <MudTh Style="width:33%">ID</MudTh>
+                        <MudTh Style="width:33%">Name</MudTh>
+                        <MudTh Style="width:33%">Time</MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate Context="row">
+                        <MudTd DataLabel="ID">@row.ID</MudTd>
+                        <MudTd DataLabel="Name">@row.Name</MudTd>
+                        <MudTd DataLabel="Time">@row.Time</MudTd>
+                    </RowTemplate>
+
+                </MudTable>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 @code {
     string selectedSection = "";
@@ -116,6 +138,13 @@
         new Attendance { Name = "Juan Dela Cruz", Status = "Present", Time = "8:01 AM" },
         new Attendance { Name = "Maria Santos", Status = "Late", Time = "8:15 AM" }
     };
+    }
+
+    @inject NavigationManager nav
+
+    void HandleLogout()
+    {
+        nav.NavigateTo("/login", true);
     }
 }
     
