@@ -1,12 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+:root {
+    --bg-primary: linear-gradient(135deg, #eaf4ff 0%, #dbeafe 45%, #c7ddff 100%);
+    --surface: rgba(255, 255, 255, 0.88);
+    --surface-solid: #ffffff;
+    --surface-soft: #f7fbff;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --brand: #2563eb;
+    --brand-dark: #1d4ed8;
+    --brand-darker: #163d8f;
+    --border: #dbe7f5;
+    --border-strong: #bfd4ee;
+    --danger: #dc2626;
+    --success: #15803d;
+    --warning: #d97706;
+    --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 14px 40px rgba(15, 23, 42, 0.12);
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --transition: 0.25s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
 
 html, body {
     height: 100%;
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    background: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+}
+
+img {
+    max-width: 100%;
+    display: block;
 }
 
 .mud-grid {
@@ -20,39 +56,52 @@ html, body {
 
 .mud-input-root {
     font-size: 15px !important;
-    color: #212121 !important;
+    color: var(--text-primary) !important;
 }
 
 .mud-input-outlined .mud-input-outlined-border {
-    border-color: #90caf9 !important;
-    border-width: 1.8px !important;
-    border-radius: 10px !important;
+    border-color: var(--border-strong) !important;
+    border-width: 1.6px !important;
+    border-radius: 14px !important;
+    transition: var(--transition);
 }
 
 .mud-input-outlined.mud-input-focused .mud-input-outlined-border {
-    border-color: #1976d2 !important;
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
 }
 
 .mud-input-error,
 .mud-input-error-text {
-    color: #c62828 !important;
+    color: var(--danger) !important;
 }
 
 .mud-input-adornment {
-    color: #1976d2 !important;
+    color: var(--brand) !important;
     cursor: pointer;
 }
 
-.error-msg {
-    color: #c62828;
-    font-weight: 500;
-    margin-top: 12px;
+.mud-input-slot {
+    min-height: 54px !important;
+}
+
+.error-msg,
+.success-msg {
+    margin-top: 14px;
     font-size: 14px;
+    font-weight: 600;
+    padding: 12px 14px;
+    border-radius: 12px;
+}
+
+.error-msg {
+    color: #991b1b;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
 }
 
 .success-msg {
-    color: #2e7d32;
-    font-weight: 500;
-    margin-top: 12px;
-    font-size: 14px;
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
 }

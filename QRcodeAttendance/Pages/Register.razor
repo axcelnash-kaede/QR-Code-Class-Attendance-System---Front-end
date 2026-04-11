@@ -1,6 +1,8 @@
 ﻿@page "/register"
 @inject HttpClient http
 @inject NavigationManager nav
+@using MudBlazor
+@using System.Net.Http.Json
 
 <div class="main-container register-page">
 
@@ -8,14 +10,19 @@
 
         <div class="left-side">
             <h1>QR Classroom Attendance</h1>
+            <div class="subtitle">
+                Create your account to access the QR classroom attendance system.
+            </div>
             <img src="aclc.png" class="logo-img" />
         </div>
 
         <div class="right-side">
 
             <h1>CREATE ACCOUNT</h1>
+            <div class="form-subtitle">Fill in the details below to register.</div>
+
             <MudForm @ref="form" Immediate="true">
-            <div class="form-group">
+                <div class="form-group">
 
                     <MudTextField T="string"
                                   Placeholder="Username"
@@ -49,9 +56,8 @@
                                   Adornment="Adornment.End"
                                   AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
                                   OnAdornmentClick="@(() => showConfirmPassword = !showConfirmPassword)" />
-                                  
 
-            </div>
+                </div>
             </MudForm>
 
             <div class="btn-group">
@@ -89,10 +95,10 @@
     private string confirmPassword;
     private string message;
     private string messageClass;
-    MudForm form;
-    bool showPassword = false;
-    bool showConfirmPassword = false;
-    
+    private MudForm form;
+    private bool showPassword = false;
+    private bool showConfirmPassword = false;
+
     private string ValidateConfirmPassword(string value)
     {
         if (value != password)
@@ -102,7 +108,23 @@
     }
 
     private async Task HandleRegister()
-{
+    {
+        await form.Validate();
+
+        if (!form.IsValid)
+        {
+            message = "Please complete all required fields";
+            messageClass = "error-msg";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            message = "Password is required";
+            messageClass = "error-msg";
+            return;
+        }
+
         if (password.Length < 10 || password.Length > 12)
         {
             message = "Password must be 10–12 characters long";
@@ -124,46 +146,46 @@
             return;
         }
 
-    var data = new
-    {
-        username = username,
-        password = password
-    };
-
-    try
-    {
-        var response = await http.PostAsJsonAsync("https://localhost:5001/api/register", data);
-
-        if (response.IsSuccessStatusCode)
+        var data = new
         {
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
+            username = username,
+            password = password
+        };
 
-            if (result.success)
+        try
+        {
+            var response = await http.PostAsJsonAsync("https://localhost:5001/api/register", data);
+
+            if (response.IsSuccessStatusCode)
             {
-                messageClass = "success-msg";
-                message = result.message;
+                var result = await response.Content.ReadFromJsonAsync<ApiResponse>();
 
-                await Task.Delay(1200);
-                nav.NavigateTo("/login", true);
+                if (result != null && result.success)
+                {
+                    messageClass = "success-msg";
+                    message = result.message;
+
+                    await Task.Delay(1200);
+                    nav.NavigateTo("/login", true);
+                }
+                else
+                {
+                    message = result?.message ?? "Registration failed";
+                    messageClass = "error-msg";
+                }
             }
             else
             {
-                message = result.message;
+                message = "Server error";
                 messageClass = "error-msg";
             }
         }
-        else
+        catch
         {
-            message = "Server error";
+            message = "Cannot connect to server";
             messageClass = "error-msg";
         }
     }
-    catch
-    {
-        message = "Cannot connect to server";
-        messageClass = "error-msg";
-    }
-}
 
     public class ApiResponse
     {

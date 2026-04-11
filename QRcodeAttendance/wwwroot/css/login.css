@@ -1,96 +1,148 @@
-﻿/* LOGIN PAGE */
-
-.main-container {
-    height: 100vh;
+﻿.auth-page {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 28px;
 }
 
 .login-box {
-    width: 1110px;
-    min-height: 650px;
+    width: min(1120px, 100%);
+    min-height: 680px;
     display: flex;
-    border-radius: 16px;
-    background: white;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 55px rgba(15, 23, 42, 0.14);
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
-/* LEFT */
 .left-side {
-    width: 70%;
+    width: 55%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    border-right: 1px solid #e0e0e0;
-    padding-top: 40px;
-    background: #f8fbff;
+    padding: 56px 42px;
+    background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 40%), linear-gradient(160deg, #eff6ff 0%, #dbeafe 100%);
+    border-right: 1px solid #dbe7f5;
+    text-align: center;
 }
 
     .left-side h1 {
-        font-size: 42px;
-        font-weight: 700;
-        color: #0d47a1;
-        text-align: center;
-        margin-bottom: 10px;
+        font-size: clamp(34px, 4vw, 50px);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        color: #123b82;
+        margin-bottom: 14px;
     }
 
-/* LOGO */
+    .left-side .subtitle {
+        max-width: 380px;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #4b5f7a;
+        margin-top: 8px;
+    }
+
 .logo-img {
     width: 220px;
-    margin-top: 60px;
+    margin-top: 34px;
+    filter: drop-shadow(0 10px 24px rgba(37, 99, 235, 0.16));
 }
 
-/* RIGHT */
 .right-side {
-    width: 50%;
-    padding: 50px 40px;
+    width: 45%;
+    padding: 56px 42px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
 }
 
     .right-side h1 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #1a237e;
-        margin-bottom: 20px;
+        font-size: 30px;
+        font-weight: 800;
+        color: #0f2f6b;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
     }
 
-/* FORM */
+.form-subtitle {
+    display: block;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
 }
 
-/* BUTTONS */
 .btn-group {
-    margin-top: 20px;
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+}
+
+.login-btn,
+.register-btn {
+    height: 54px;
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 .login-btn {
-    height: 52px;
-    font-weight: 600;
-    border-radius: 10px;
-    background: #1976d2 !important;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
     color: white !important;
+    box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
 }
 
     .login-btn:hover {
-        background: #0d47a1 !important;
+        background: linear-gradient(135deg, #1d4ed8, #163d8f) !important;
+        transform: translateY(-1px);
     }
 
 .register-btn {
-    height: 52px;
-    border-radius: 10px;
-    border: 1.8px solid #1976d2 !important;
-    color: #1976d2 !important;
+    border: 1.8px solid #2563eb !important;
+    color: #2563eb !important;
+    background: rgba(255, 255, 255, 0.9) !important;
 }
 
     .register-btn:hover {
-        background: #e3f2fd !important;
+        background: #eff6ff !important;
+        transform: translateY(-1px);
     }
+
+@media (max-width: 900px) {
+    .login-box {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side {
+        padding: 42px 28px 28px;
+        border-right: 0;
+        border-bottom: 1px solid #dbe7f5;
+    }
+
+    .right-side {
+        padding: 36px 28px 42px;
+    }
+
+    .logo-img {
+        width: 160px;
+    }
+}

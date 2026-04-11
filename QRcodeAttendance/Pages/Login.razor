@@ -3,24 +3,24 @@
 @inject NavigationManager nav
 @using MudBlazor
 
-
-<div class="main-container">
+<div class="auth-page">
 
     <div class="login-box">
 
-        
         <div class="left-side">
             <h1>
                 QR Classroom <br />
                 Attendance
             </h1>
+            <div class="subtitle">
+                Fast, secure, and modern QR-based attendance monitoring for classrooms.
+            </div>
             <img src="aclc.png" class="logo-img" />
         </div>
 
-
         <div class="right-side">
-
             <h1>LOGIN</h1>
+            <div class="form-subtitle">Welcome back! Please sign in to continue.</div>
 
             <MudForm @ref="form" Immediate="true">
 
@@ -78,13 +78,14 @@
     </div>
 
 </div>
+
 @code {
-    bool showPassword = false;
-    MudForm form;
-    string username;
-    string password;
-    string message;
-    string messageClass;
+    private bool showPassword = false;
+    private MudForm form;
+    private string username;
+    private string password;
+    private string message;
+    private string messageClass;
 
     private async Task HandleLogin()
     {
@@ -97,7 +98,7 @@
             return;
         }
 
-        // Simulated login (replace with API later)
+        // Temporary simulated login
         if (username != "admin" || password != "admin123")
         {
             message = "Invalid username or password";
@@ -109,6 +110,6 @@
         messageClass = "success-msg";
 
         await Task.Delay(1000);
-        nav.NavigateTo("/dashboard");
+        nav.NavigateTo("/main_dashboard");
     }
 }

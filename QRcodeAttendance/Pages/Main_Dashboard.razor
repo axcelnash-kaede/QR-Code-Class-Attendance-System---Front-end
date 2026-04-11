@@ -1,16 +1,16 @@
 ﻿@page "/main_dashboard"
 @using MudBlazor
+@inject NavigationManager nav
 
 <div class="dashboard-wrapper">
 
     <div class="dashboard-container">
 
-        <!-- SIDEBAR -->
         <div class="sidebar">
 
             <div class="sidebar-header">
                 <img src="aclc.png" class="sidebar-logo-img" />
-                <div class="sidebar-title">QR Classroom</div>
+                <div class="sidebar-title">QR Classroom Attendance</div>
             </div>
 
             <div class="sidebar-content">
@@ -44,10 +44,30 @@
 
         </div>
 
-        <!-- MAIN CONTENT -->
         <div class="main-panel">
 
-            <!-- TOP BAR -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-label">Total Students</div>
+                    <div class="summary-value">@TotalStudents</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-label">Present</div>
+                    <div class="summary-value">@PresentCount</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-label">Late</div>
+                    <div class="summary-value">@LateCount</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-label">Absent</div>
+                    <div class="summary-value">@AbsentCount</div>
+                </div>
+            </div>
+
             <div class="top-bar">
                 <div class="title">
                     @(string.IsNullOrEmpty(selectedSection)
@@ -61,31 +81,49 @@
                 </div>
             </div>
 
-            <!-- TABLE CARD -->
             <div class="table-card">
+                @if (attendanceList.Any())
+                {
+                    <div class="table-toolbar">
+                        <div class="table-subtitle">
+                            Showing attendance records for <b>@selectedSection</b> - <b>@selectedSubject</b>
+                        </div>
+                    </div>
 
-                <MudTable T="Attendance"
-                          Items="@attendanceList"
-                          Dense="true"
-                          FixedHeader="true"
-                          Height="100%"
-                          Bordered="true"
-                          Striped="true">
+                    <MudTable T="Attendance"
+                              Items="@attendanceList"
+                              Dense="true"
+                              FixedHeader="true"
+                              Height="100%"
+                              Bordered="true"
+                              Striped="true">
 
-                    <HeaderContent>
-                        <MudTh Style="width:33%">ID</MudTh>
-                        <MudTh Style="width:33%">Name</MudTh>
-                        <MudTh Style="width:33%">Time</MudTh>
-                    </HeaderContent>
+                        <HeaderContent>
+                            <MudTh>ID</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh>Time</MudTh>
+                        </HeaderContent>
 
-                    <RowTemplate Context="row">
-                        <MudTd DataLabel="ID">@row.ID</MudTd>
-                        <MudTd DataLabel="Name">@row.Name</MudTd>
-                        <MudTd DataLabel="Time">@row.Time</MudTd>
-                    </RowTemplate>
+                        <RowTemplate Context="row">
+                            <MudTd DataLabel="ID">@row.ID</MudTd>
+                            <MudTd DataLabel="Name">@row.Name</MudTd>
+                            <MudTd DataLabel="Status">
+                                <span class="status-chip @GetStatusClass(row.Status)">
+                                    @row.Status
+                                </span>
+                            </MudTd>
+                            <MudTd DataLabel="Time">@row.Time</MudTd>
+                        </RowTemplate>
 
-                </MudTable>
-
+                    </MudTable>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        Select a section and subject from the sidebar to view attendance records.
+                    </div>
+                }
             </div>
 
         </div>
@@ -95,8 +133,8 @@
 </div>
 
 @code {
-    string selectedSection = "";
-    string selectedSubject = "";
+    private string selectedSection = "";
+    private string selectedSubject = "";
 
     public class Section
     {
@@ -112,39 +150,54 @@
         public string Time { get; set; }
     }
 
-    List<Section> sections = new()
+    private List<Section> sections = new()
     {
         new Section
         {
-            Name = "BSIT 1A",
-            Subjects = new List<string> { "Programming", "Math" }
+            Name = "BSIT-22F",
+            Subjects = new List<string> { "PE", "Math" }
         },
         new Section
         {
-            Name = "BSIT 2B",
+            Name = "BSIT-22C",
             Subjects = new List<string> { "Database", "Networking" }
         }
     };
 
-    List<Attendance> attendanceList = new();
+    private List<Attendance> attendanceList = new();
 
-    void LoadAttendance(string section, string subject)
+    private int TotalStudents => attendanceList.Count;
+    private int PresentCount => attendanceList.Count(x => x.Status == "Present");
+    private int LateCount => attendanceList.Count(x => x.Status == "Late");
+    private int AbsentCount => attendanceList.Count(x => x.Status == "Absent");
+
+    private void LoadAttendance(string section, string subject)
     {
         selectedSection = section;
         selectedSubject = subject;
 
         attendanceList = new List<Attendance>
-    {
-        new Attendance { Name = "Juan Dela Cruz", Status = "Present", Time = "8:01 AM" },
-        new Attendance { Name = "Maria Santos", Status = "Late", Time = "8:15 AM" }
-    };
+        {
+            new Attendance { ID = "2024-001", Name = "Juan Dela Cruz", Status = "Present", Time = "8:01 AM" },
+            new Attendance { ID = "2024-002", Name = "Maria Santos", Status = "Late", Time = "8:15 AM" },
+            new Attendance { ID = "2024-003", Name = "Carlo Reyes", Status = "Absent", Time = "-" },
+            new Attendance { ID = "2024-004", Name = "Angela Cruz", Status = "Present", Time = "7:58 AM" }
+        };
     }
 
-    @inject NavigationManager nav
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Present" => "status-present",
+            "Late" => "status-late",
+            "Absent" => "status-absent",
+            _ => ""
+        };
+    }
 
-    void HandleLogout()
+    private void HandleLogout()
     {
         nav.NavigateTo("/login", true);
     }
 }
-    
