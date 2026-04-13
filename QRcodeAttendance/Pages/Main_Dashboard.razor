@@ -1,6 +1,7 @@
 ﻿@page "/main_dashboard"
 @using MudBlazor
 @inject NavigationManager nav
+@inject IJSRuntime JS
 
 <div class="dashboard-wrapper">
 
@@ -9,7 +10,6 @@
         <div class="sidebar">
 
             <div class="sidebar-header">
-                <img src="aclc.png" class="sidebar-logo-img" />
                 <div class="sidebar-title">QR Classroom Attendance</div>
             </div>
 
@@ -171,6 +171,16 @@
     private int LateCount => attendanceList.Count(x => x.Status == "Late");
     private int AbsentCount => attendanceList.Count(x => x.Status == "Absent");
 
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            nav.NavigateTo("/login");
+        }
+    }
+
     private void LoadAttendance(string section, string subject)
     {
         selectedSection = section;
@@ -196,8 +206,10 @@
         };
     }
 
-    private void HandleLogout()
+    private async Task HandleLogout()
     {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "token");
+        await JS.InvokeVoidAsync("localStorage.removeItem", "userEmail");
         nav.NavigateTo("/login", true);
     }
 }

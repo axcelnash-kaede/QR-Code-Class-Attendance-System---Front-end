@@ -77,8 +77,13 @@ img {
 }
 
 .mud-input-adornment {
-    color: var(--brand) !important;
+    color: #64748b !important;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.mud-input-root.mud-focused .mud-input-adornment {
+    color: #2563eb !important;
 }
 
 .mud-input-slot {

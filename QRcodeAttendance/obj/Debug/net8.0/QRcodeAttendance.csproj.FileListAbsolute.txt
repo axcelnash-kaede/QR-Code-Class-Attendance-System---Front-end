@@ -1,11 +1,3 @@
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.csproj.AssemblyReference.cache
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.AssemblyInfoInputs.cache
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.AssemblyInfo.cs
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.csproj.CoreCompileInputs.cache
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.sourcelink.json
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\wwwroot\_framework\blazor.webassembly.js
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Authorization.wasm
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\wwwroot\_framework\Microsoft.AspNetCore.Components.wasm
@@ -630,6 +622,14 @@ C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debu
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\icudt_EFIGS.dat
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\icudt_no_CJK.dat
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\bin\Debug\net8.0\emcc-props.json
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.csproj.AssemblyReference.cache
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.AssemblyInfoInputs.cache
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.AssemblyInfo.cs
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.csproj.CoreCompileInputs.cache
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.sourcelink.json
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Authorization.wasm
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.wasm
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.Forms.wasm
@@ -1049,6 +1049,6 @@ C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debu
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\refint\QRcodeAttendance.dll
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\QRcodeAttendance.pdb
 C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\ref\QRcodeAttendance.dll
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-u0lbbw4r94.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-bn8odygo7y.gz
-C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-zyvswhfu59.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\fwo9yxc9wk-3d8qkw6813.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\2zayban1ry-jk97jpinlk.gz
+C:\Users\Jhermaine Nheil\source\repos\QRcodeAttendance\QRcodeAttendance\obj\Debug\net8.0\compressed\a4x0p8banv-qbs0m4p3bm.gz

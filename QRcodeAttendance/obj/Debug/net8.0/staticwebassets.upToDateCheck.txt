@@ -3,10 +3,10 @@ wwwroot\aclclogo.webp
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
-wwwroot\css\login.css
+wwwroot\css\main_dashboard.css
 wwwroot\css\register.css
 wwwroot\favicon.png
 wwwroot\icon-192.png
 wwwroot\index.html
 wwwroot\sample-data\weather.json
-wwwroot\css\main_dashboard.css
+wwwroot\css\login.css
