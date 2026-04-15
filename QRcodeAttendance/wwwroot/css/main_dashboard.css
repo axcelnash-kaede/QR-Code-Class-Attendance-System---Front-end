@@ -20,7 +20,22 @@
     backdrop-filter: blur(14px);
     box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.45);
+    position: relative;
 }
+
+    .dashboard-container::after {
+        content: "";
+        position: absolute;
+        bottom: 40px;
+        right: 60px;
+        width: 420px;
+        height: 420px;
+        background: url('/aclc.png') no-repeat center;
+        background-size: contain;
+        opacity: 0.08;
+        pointer-events: none;
+        filter: grayscale(100%) contrast(110%);
+    }
 
 .sidebar {
     width: 280px;
@@ -30,6 +45,7 @@
     padding: 20px 18px 18px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     box-shadow: 0 14px 30px rgba(16, 44, 103, 0.28);
 }
 
@@ -40,11 +56,14 @@
 .sidebar-header {
     text-align: center;
     margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .sidebar-logo-img {
-    width: 72px;
-    margin: 0 auto 8px;
+    width: 76px;
+    margin: 0 auto 10px;
     filter: drop-shadow(0 8px 18px rgba(255, 255, 255, 0.18));
 }
 
@@ -54,7 +73,8 @@
     letter-spacing: -0.02em;
     line-height: 1.15;
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    max-width: 190px;
 }
 
 .sidebar-content {
@@ -63,6 +83,16 @@
     flex-direction: column;
     justify-content: flex-start;
     margin-top: 4px;
+}
+
+.section-title {
+    margin: 8px 0 12px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+    padding-left: 4px;
 }
 
 .sidebar .mud-expansion-panels {
@@ -88,16 +118,6 @@
     padding: 4px 0 0 0 !important;
 }
 
-.section-title {
-    margin: 8px 0 12px;
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.9;
-    padding-left: 4px;
-}
-
 .subject-btn {
     margin: 6px 0 !important;
     justify-content: flex-start !important;
@@ -111,21 +131,26 @@
 }
 
     .subject-btn:hover {
-        background: rgba(255, 255, 255, 0.18) !important;
-        transform: translateX(2px);
-    }
-
-    .subject-btn:hover {
         background: rgba(255, 255, 255, 0.16) !important;
         transform: translateX(3px);
     }
 
 .logout-btn {
+    height: 48px;
     border-radius: 14px !important;
     font-weight: 700 !important;
-    height: 48px;
-    margin-top: 14px;
+    text-transform: none !important;
+    background: rgba(8, 20, 52, 0.42) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    transition: background 0.2s ease, transform 0.2s ease;
 }
+
+    .logout-btn:hover {
+        background: rgba(8, 20, 52, 0.58) !important;
+        transform: translateY(-1px);
+    }
 
 .main-panel {
     flex: 1;

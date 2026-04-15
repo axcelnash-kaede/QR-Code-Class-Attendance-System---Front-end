@@ -10,6 +10,7 @@
         <div class="sidebar">
 
             <div class="sidebar-header">
+                <img src="/aclc.png" class="sidebar-logo-img" />
                 <div class="sidebar-title">QR Classroom Attendance</div>
             </div>
 
@@ -36,7 +37,6 @@
             </div>
 
             <MudButton Variant="Variant.Filled"
-                       Color="Color.Error"
                        Class="logout-btn"
                        OnClick="HandleLogout">
                 Log Out
@@ -133,6 +133,8 @@
 </div>
 
 @code {
+    private bool designMode = true;
+
     private string selectedSection = "";
     private string selectedSubject = "";
 
@@ -173,11 +175,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
-
-        if (string.IsNullOrWhiteSpace(token))
+        if (!designMode)
         {
-            nav.NavigateTo("/login");
+            var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                nav.NavigateTo("/login");
+                return;
+            }
         }
     }
 
