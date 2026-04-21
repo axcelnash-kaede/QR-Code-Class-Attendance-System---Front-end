@@ -1,7 +1,7 @@
-﻿namespace QRcodeAttendance
+﻿namespace QRcodeAttendance.Services
 {
     public static class ApiConfig
     {
-        public const string BaseUrl = "http://192.168.8.147:5041";
+        public static string BaseUrl = "http://10.116.59.229:5041";
     }
 }
