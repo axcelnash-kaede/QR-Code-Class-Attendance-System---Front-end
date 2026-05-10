@@ -1,0 +1,241 @@
+﻿@page "/create-session"
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+@using Microsoft.JSInterop
+@using QRcodeAttendance.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<h3>Create Attendance Session</h3>
+
+<div class="card p-4 shadow-sm">
+
+    <!-- TITLE -->
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input class="form-control" @bind="model.Title" />
+    </div>
+
+    <!-- SECTION -->
+    <div class="mb-3">
+        <label class="form-label">Section</label>
+        <select class="form-select" @bind="_selectedSectionId">
+            <option value="0">Select Section</option>
+            @foreach (var sec in sections)
+            {
+                <option value="@sec.SectionId">@sec.SectionName</option>
+            }
+        </select>
+    </div>
+
+    <!-- SUBJECT -->
+    <div class="mb-3">
+        <label class="form-label">Subject</label>
+        <select class="form-select" @bind="model.SubjectId">
+            <option value="0">Select Subject</option>
+            @foreach (var sub in filteredSubjects)
+            {
+                <option value="@sub.SubjectId">@sub.SubjectName</option>
+            }
+        </select>
+    </div>
+
+    <!-- GRACE -->
+    <div class="mb-3">
+        <label class="form-label">Grace Minutes</label>
+        <input type="number" class="form-control" @bind="model.GraceMinutes" />
+    </div>
+
+    <!-- EXPIRATION -->
+    <div class="mb-3">
+        <label class="form-label">Expiration Minutes</label>
+        <input type="number" class="form-control" @bind="model.ExpirationMinutes" />
+    </div>
+
+    <!-- BUTTON -->
+    <button class="btn btn-primary" @onclick="CreateSessionAsync" disabled="@loading">
+        @(loading ? "Creating..." : "Create Session")
+    </button>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">@errorMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(successMessage))
+    {
+        <div class="alert alert-success mt-3">@successMessage</div>
+    }
+</div>
+
+@if (sessionResponse is not null)
+{
+    <div class="card p-4 shadow-sm mt-4">
+        <h4>Generated QR</h4>
+
+        <p><strong>Session ID:</strong> @sessionResponse.SessionId</p>
+        <p><strong>QR Token:</strong> @sessionResponse.QrToken</p>
+        <p><strong>Raw QR Content:</strong> @RawQrContent</p>
+
+        <div class="mt-3">
+            <img src="@sessionResponse.QrCode"
+                 alt="QR"
+                 style="max-width:300px; border:1px solid #ddd; padding:10px;" />
+        </div>
+
+        <div class="mt-3">
+            <small class="text-muted">
+                Mobile should scan EXACTLY:
+                <strong>@RawQrContent</strong>
+            </small>
+        </div>
+    </div>
+}
+
+@code {
+    private bool loading = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    private CreateAttendanceSessionDto model = new()
+    {
+        GraceMinutes = 5,
+        ExpirationMinutes = 30
+    };
+
+    private CreateSessionResponseDto? sessionResponse;
+
+    private string RawQrContent =>
+        sessionResponse is null
+            ? ""
+            : $"{sessionResponse.SessionId}|{sessionResponse.QrToken}";
+
+    private List<TeacherSectionSubjectsDto> sections = new();
+    private List<TeacherSectionSubjectItemDto> filteredSubjects = new();
+
+    // 🔥 FIXED PROPERTY (NO onchange needed)
+    private int _selectedSectionId
+    {
+        get => model.SectionId;
+        set
+        {
+            model.SectionId = value;
+
+            var selected = sections.FirstOrDefault(x => x.SectionId == value);
+            filteredSubjects = selected?.Subjects ?? new();
+            model.SubjectId = 0;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSectionsAsync();
+    }
+
+    private async Task LoadSectionsAsync()
+    {
+        try
+        {
+            var token = await GetTokenAsync();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "No token found. Please login.";
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var result = await Http.GetFromJsonAsync<List<TeacherSectionSubjectsDto>>(
+                "http://10.207.25.229:5041/api/attendance/teacher-section-subjects"
+            );
+
+            sections = result ?? new();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load sections: {ex.Message}";
+        }
+    }
+
+    private async Task CreateSessionAsync()
+    {
+        errorMessage = null;
+        successMessage = null;
+        sessionResponse = null;
+
+        if (model.SectionId <= 0)
+        {
+            errorMessage = "Select a section.";
+            return;
+        }
+
+        if (model.SubjectId <= 0)
+        {
+            errorMessage = "Select a subject.";
+            return;
+        }
+
+        loading = true;
+
+        try
+        {
+            var token = await GetTokenAsync();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "Token missing.";
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.PostAsJsonAsync(
+                "http://10.207.25.229:5041/api/attendance/create-session",
+                model
+            );
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                sessionResponse =
+                    System.Text.Json.JsonSerializer.Deserialize<CreateSessionResponseDto>(
+                        body,
+                        new System.Text.Json.JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                successMessage = "Session created!";
+            }
+            else
+            {
+                errorMessage = body;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task<string?> GetTokenAsync()
+    {
+        try
+        {
+            return await JS.InvokeAsync<string>("localStorage.getItem", "token");
+        }
+        catch
+        {
+            return null;
+        }
+    }
+}

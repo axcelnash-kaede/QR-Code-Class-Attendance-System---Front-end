@@ -31,8 +31,40 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/AdminDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5EYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Admin/CreateStudent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ3JlYXRlU3R1ZGVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Admin/DataTable.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGF0YVRhYmxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Admin/PendingStudents.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUGVuZGluZ1N0dWRlbnRzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Admin/StatCard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU3RhdENhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Admin/Students.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU3R1ZGVudHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/CreateSession.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3JlYXRlU2Vzc2lvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/ForgotPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9yZ290UGFzc3dvcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Login.razor]
@@ -41,6 +73,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Main_Dashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbl9EYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/PendingStudents.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGVuZGluZ1N0dWRlbnRzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Jhermaine Nheil/source/repos/QRcodeAttendance/QRcodeAttendance/Pages/Weather.razor]

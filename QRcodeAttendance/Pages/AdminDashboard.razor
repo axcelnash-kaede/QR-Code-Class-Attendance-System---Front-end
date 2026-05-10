@@ -1,0 +1,1748 @@
+﻿@page "/admin_dashboard"
+
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+@using System.Text.RegularExpressions
+
+<div class="admin-pro">
+
+    <aside class="admin-sidebar">
+        <div class="brand-box">
+            <div class="brand-icon">QR</div>
+            <div>
+                <h3>QR Attendance</h3>
+                <span>Administrator Panel</span>
+            </div>
+        </div>
+
+        <nav>
+            <button type="button" @onclick="@(() => ScrollTo("overview"))">Overview</button>
+
+            <button type="button" @onclick="@(() => ScrollTo("createTeacher"))">Add Teacher</button>
+            <button type="button" @onclick="@(() => ScrollTo("createStudent"))">Add Student</button>
+            <button type="button" @onclick="@(() => ScrollTo("addSubject"))">Add Subject</button>
+            <button type="button" @onclick="@(() => ScrollTo("addSection"))">Add Section</button>
+            <button type="button" @onclick="@(() => ScrollTo("assignSubject"))">Assign Subject</button>
+
+            <button type="button" @onclick="@(() => ScrollTo("teacherAssignments"))">Teacher Assignments</button>
+            <button type="button" @onclick="@(() => ScrollTo("approvals"))">Approvals List</button>
+            <button type="button" @onclick="@(() => ScrollTo("teachers"))">Teachers List</button>
+            <button type="button" @onclick="@(() => ScrollTo("students"))">Students List</button>
+            <button type="button" @onclick="@(() => ScrollTo("subjectsList"))">Subjects List</button>
+            <button type="button" @onclick="@(() => ScrollTo("sectionsList"))">Sections List</button>
+        </nav>
+
+        <button type="button" class="sidebar-logout" @onclick="Logout">Log Out</button>
+    </aside>
+
+    <main class="admin-main">
+
+        <section class="hero-panel" id="overview">
+            <div>
+                <div class="eyebrow">Administrator Panel</div>
+                <h1>Admin Dashboard</h1>
+                <p>Add teachers, students, subjects, sections, and manage teacher-specific section/subject assignments.</p>
+            </div>
+
+            <button type="button" class="refresh-btn" @onclick="LoadAll">
+                Refresh Data
+            </button>
+        </section>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="toast error">@errorMessage</div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(successMessage))
+        {
+            <div class="toast success">@successMessage</div>
+        }
+
+        <section class="stats-grid">
+            <div class="stat-card-pro">
+                <div class="stat-icon">👨‍🎓</div>
+                <span>Total Students</span>
+                <strong>@dashboard.TotalStudents</strong>
+            </div>
+
+            <div class="stat-card-pro">
+                <div class="stat-icon">👨‍🏫</div>
+                <span>Total Teachers</span>
+                <strong>@dashboard.TotalTeachers</strong>
+            </div>
+
+            <div class="stat-card-pro">
+                <div class="stat-icon">📚</div>
+                <span>Total Subjects</span>
+                <strong>@subjects.Count</strong>
+            </div>
+
+            <div class="stat-card-pro">
+                <div class="stat-icon">🧩</div>
+                <span>Assignments</span>
+                <strong>@teacherAssignments.Count</strong>
+            </div>
+        </section>
+
+        <!-- ADD TEACHER + STUDENT -->
+        <section class="form-grid">
+
+            <div class="glass-card" id="createTeacher">
+                <div class="card-head">
+                    <div>
+                        <h2>Add Teacher</h2>
+                        <p>Create teacher account and automatically assign section/subject.</p>
+                    </div>
+                    <span class="card-chip">Teacher</span>
+                </div>
+
+                <div class="form-stack">
+                    <input placeholder="Full Name" @bind="teacherForm.FullName" @bind:event="oninput" />
+                    <input placeholder="Email Address" @bind="teacherForm.Email" @bind:event="oninput" />
+                    <input placeholder="Password" type="password" @bind="teacherForm.Password" @bind:event="oninput" />
+
+                    <select @bind="teacherForm.SectionId">
+                        <option value="0">Select Section</option>
+                        @foreach (var sec in sections)
+                        {
+                            <option value="@sec.Id">@sec.Name</option>
+                        }
+                    </select>
+
+                    <select @bind="teacherForm.SubjectId">
+                        <option value="0">Select Subject</option>
+                        @foreach (var subject in subjects)
+                        {
+                            <option value="@subject.Id">@GetSubjectName(subject)</option>
+                        }
+                    </select>
+
+                    <button type="button" class="primary-action" @onclick="CreateTeacher">
+                        Create Teacher
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card" id="createStudent">
+                <div class="card-head">
+                    <div>
+                        <h2>Add Student</h2>
+                        <p>Create, auto-approve, and enroll student to selected subject.</p>
+                    </div>
+                    <span class="card-chip green">Student</span>
+                </div>
+
+                <div class="form-stack">
+                    <input placeholder="Full Name" @bind="studentForm.FullName" @bind:event="oninput" />
+                    <input placeholder="Email Address" @bind="studentForm.Email" @bind:event="oninput" />
+                    <input placeholder="Password" type="password" @bind="studentForm.Password" @bind:event="oninput" />
+                    <input placeholder="Student Number e.g. 0001" maxlength="4" inputmode="numeric" @bind="studentForm.StudentId" @bind:event="oninput" />
+
+                    <select @bind="studentForm.SectionId">
+                        <option value="0">Select Section</option>
+                        @foreach (var sec in sections)
+                        {
+                            <option value="@sec.Id">@sec.Name</option>
+                        }
+                    </select>
+
+                    <select @bind="studentForm.SubjectId">
+                        <option value="0">Select Subject</option>
+                        @foreach (var subject in subjects)
+                        {
+                            <option value="@subject.Id">@subject.SubjectName</option>
+                        }
+                    </select>
+
+                    <button type="button" class="primary-action" @onclick="CreateStudent">
+                        Create Student
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ADD SUBJECT + SECTION -->
+        <section class="form-grid">
+
+            <div class="glass-card" id="addSubject">
+                <div class="card-head">
+                    <div>
+                        <h2>Add Subject</h2>
+                        <p>Add reusable subjects manually.</p>
+                    </div>
+                    <span class="card-chip">Subject</span>
+                </div>
+
+                <div class="form-stack">
+                    <input class="admin-input"
+                           placeholder="Enter subject name"
+                           @bind="newSubjectName"
+                           @bind:event="oninput" />
+
+                    <button type="button"
+                            class="primary-action"
+                            disabled="@isCreatingSubject"
+                            @onclick="CreateSubject">
+                        @(isCreatingSubject ? "Saving..." : "Add Subject")
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card" id="addSection">
+                <div class="card-head">
+                    <div>
+                        <h2>Add Section</h2>
+                        <p>Create sections manually.</p>
+                    </div>
+                    <span class="card-chip green">Section</span>
+                </div>
+
+                <div class="form-stack">
+                    <input class="admin-input"
+                           placeholder="Enter section name"
+                           @bind="newSectionName"
+                           @bind:event="oninput" />
+
+                    <button type="button"
+                            class="primary-action"
+                            disabled="@isCreatingSection"
+                            @onclick="CreateSection">
+                        @(isCreatingSection ? "Saving..." : "Add Section")
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ASSIGN SUBJECT -->
+        <section class="glass-card" id="assignSubject">
+            <div class="card-head">
+                <div>
+                    <h2>Add Assign Subject</h2>
+                    <p>Assign a teacher to one specific section and subject.</p>
+                </div>
+                <span class="card-chip">Assign</span>
+            </div>
+
+            <div class="form-stack">
+                <select @bind="assignForm.TeacherId">
+                    <option value="0">Select Teacher</option>
+                    @foreach (var teacher in teachers.Where(t => t.IsActive))
+                    {
+                        <option value="@teacher.Id">@teacher.FullName</option>
+                    }
+                </select>
+
+                <select @bind="assignForm.SectionId">
+                    <option value="0">Select Section</option>
+                    @foreach (var sec in sections)
+                    {
+                        <option value="@sec.Id">@sec.Name</option>
+                    }
+                </select>
+
+                <select @bind="assignForm.SubjectId">
+                    <option value="0">Select Subject</option>
+                    @foreach (var subject in subjects)
+                    {
+                        <option value="@subject.Id">@subject.SubjectName</option>
+                    }
+                </select>
+
+                <button type="button" class="primary-action" @onclick="AssignSubject">
+                    Assign Subject
+                </button>
+            </div>
+        </section>
+
+        <!-- TEACHER ASSIGNMENTS LIST -->
+        <section class="glass-card table-card-pro" id="teacherAssignments">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Teacher Assignments List</h2>
+                    <p>Manage teacher section and subject assignments.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadTeacherAssignments">
+                    Refresh
+                </button>
+            </div>
+
+            @if (teacherAssignments.Count == 0)
+            {
+                <div class="empty-state">No teacher assignments found.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Teacher</th>
+                                <th>Section</th>
+                                <th>Subject</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in teacherAssignments.OrderBy(x => x.TeacherName).ThenBy(x => x.SectionName).ThenBy(x => x.SubjectName))
+                            {
+                                <tr>
+                                    <td>@item.TeacherName</td>
+                                    <td>@item.SectionName</td>
+                                    <td>@item.SubjectName</td>
+                                    <td>
+                                        <div class="actions">
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    @onclick="() => EditTeacherAssignment(item)">
+                                                Edit
+                                            </button>
+
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    @onclick="() => RemoveTeacherAssignment(item.Id)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <!-- APPROVALS LIST -->
+        <section class="glass-card table-card-pro" id="approvals">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Approvals List</h2>
+                    <p>Approve or reject student mobile registrations.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadPendingStudents">
+                    Refresh
+                </button>
+            </div>
+
+            @if (pendingStudents.Count == 0)
+            {
+                <div class="empty-state">No pending student registrations.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Section</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var student in pendingStudents)
+                            {
+                                <tr>
+                                    <td>@FormatStudentId(student.StudentId)</td>
+                                    <td>@student.FullName</td>
+                                    <td>@student.Email</td>
+                                    <td>@DisplayText(student.SectionName, "No section")</td>
+                                    <td>
+                                        <div class="actions">
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    disabled="@isProcessingApproval"
+                                                    @onclick="() => ApproveStudent(student.Id)">
+                                                @(isProcessingApproval ? "..." : "Approve")
+                                            </button>
+
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    disabled="@isProcessingApproval"
+                                                    @onclick="() => RejectStudent(student.Id)">
+                                                @(isProcessingApproval ? "..." : "Reject")
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <!-- TEACHERS LIST -->
+        <section class="glass-card table-card-pro" id="teachers">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Teachers List</h2>
+                    <p>Registered teacher accounts.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadTeachers">
+                    Refresh
+                </button>
+            </div>
+
+            @if (teachers.Count == 0)
+            {
+                <div class="empty-state">No teachers found.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Teacher ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Assignments</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var teacher in teachers)
+                            {
+                                <tr class="@(!teacher.IsActive ? "inactive-row" : "")">
+                                    <td>@DisplayText(teacher.StudentId, "-")</td>
+                                    <td>@teacher.FullName</td>
+                                    <td>@teacher.Email</td>
+                                    <td>@GetTeacherAssignments(teacher.Id)</td>
+                                    <td>
+                                        <span class="status @(teacher.IsActive ? "approved" : "rejected")">
+                                            @(teacher.IsActive ? "Active" : "Removed")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (teacher.IsActive)
+                                        {
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    @onclick="() => RemoveTeacher(teacher.Id)">
+                                                Remove
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    @onclick="() => RestoreUser(teacher.Id)">
+                                                Restore
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <!-- STUDENTS LIST -->
+        <section class="glass-card table-card-pro" id="students">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Students List</h2>
+                    <p>Registered student accounts.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadStudents">
+                    Refresh
+                </button>
+            </div>
+
+            @if (students.Count == 0)
+            {
+                <div class="empty-state">No students found.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Section</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var student in students)
+                            {
+                                <tr class="@(!student.IsActive ? "inactive-row" : "")">
+                                    <td>@FormatStudentId(student.StudentId)</td>
+                                    <td>@student.FullName</td>
+                                    <td>@student.Email</td>
+                                    <td>@DisplayText(student.SectionName, "No section")</td>
+                                    <td>
+                                        <span class="status @(student.IsActive ? "approved" : "rejected")">
+                                            @(student.IsActive ? "Active" : "Dropped")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (student.IsActive)
+                                        {
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    @onclick="() => DropStudent(student.Id)">
+                                                Drop
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    @onclick="() => RestoreUser(student.Id)">
+                                                Restore
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <!-- SUBJECTS LIST -->
+        <section class="glass-card table-card-pro" id="subjectsList">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Subjects List</h2>
+                    <p>View, edit, and remove subjects.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadSubjects">
+                    Refresh
+                </button>
+            </div>
+
+            @if (subjects.Count == 0)
+            {
+                <div class="empty-state">No subjects found.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subject ID</th>
+                                <th>Subject Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var subject in subjects.OrderBy(s => s.Id))
+                            {
+                                <tr>
+                                    <td>@subject.Id</td>
+                                    <td>@subject.SubjectName</td>
+                                    <td>
+                                        <div class="actions">
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    @onclick="() => EditSubject(subject)">
+                                                Edit
+                                            </button>
+
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    @onclick="() => RemoveSubject(subject.Id)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+        <!-- SECTIONS LIST -->
+        <section class="glass-card table-card-pro" id="sectionsList">
+            <div class="table-header-pro">
+                <div>
+                    <h2>Sections List</h2>
+                    <p>View, edit, and remove sections.</p>
+                </div>
+
+                <button type="button" class="outline-action" @onclick="LoadSections">
+                    Refresh
+                </button>
+            </div>
+
+            @if (sections.Count == 0)
+            {
+                <div class="empty-state">No sections found.</div>
+            }
+            else
+            {
+                <div class="table-wrap-pro scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Section ID</th>
+                                <th>Section Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var sec in sections.OrderBy(s => s.Id))
+                            {
+                                <tr>
+                                    <td>@sec.Id</td>
+                                    <td>@sec.Name</td>
+                                    <td>
+                                        <div class="actions">
+                                            <button type="button"
+                                                    class="approve-btn"
+                                                    @onclick="() => EditSection(sec)">
+                                                Edit
+                                            </button>
+
+                                            <button type="button"
+                                                    class="reject-btn"
+                                                    @onclick="() => RemoveSection(sec.Id)">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </section>
+
+    </main>
+</div>
+
+@if (isEditModalOpen)
+{
+    <div class="custom-modal-backdrop">
+        <div class="custom-modal">
+            <h3>@editModalTitle</h3>
+            <p>@editModalSubtitle</p>
+
+            <input class="admin-input"
+                   placeholder="Enter new name"
+                   @bind="editName"
+                   @bind:event="oninput" />
+
+            <div class="modal-actions">
+                <button type="button" class="outline-action" @onclick="CloseEditModal">
+                    Cancel
+                </button>
+
+                <button type="button" class="approve-btn" @onclick="SaveEditModal">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (isAssignmentModalOpen)
+{
+    <div class="custom-modal-backdrop">
+        <div class="custom-modal">
+            <h3>Edit Teacher Assignment</h3>
+            <p>Update the teacher, section, and subject assignment.</p>
+
+            <div class="form-stack">
+                <select @bind="editAssignmentForm.TeacherId">
+                    <option value="0">Select Teacher</option>
+                    @foreach (var teacher in teachers.Where(t => t.IsActive))
+                    {
+                        <option value="@teacher.Id">@teacher.FullName</option>
+                    }
+                </select>
+
+                <select @bind="editAssignmentForm.SectionId">
+                    <option value="0">Select Section</option>
+                    @foreach (var sec in sections)
+                    {
+                        <option value="@sec.Id">@sec.Name</option>
+                    }
+                </select>
+
+                <select @bind="editAssignmentForm.SubjectId">
+                    <option value="0">Select Subject</option>
+                    @foreach (var subject in subjects)
+                    {
+                        <option value="@subject.Id">@subject.SubjectName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="outline-action" @onclick="CloseAssignmentModal">
+                    Cancel
+                </button>
+
+                <button type="button" class="approve-btn" @onclick="SaveTeacherAssignment">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (isConfirmModalOpen)
+{
+    <div class="custom-modal-backdrop">
+        <div class="custom-modal">
+            <h3>@confirmTitle</h3>
+            <p>@confirmMessage</p>
+
+            <div class="modal-actions">
+                <button type="button" class="outline-action" @onclick="CloseConfirmModal">
+                    Cancel
+                </button>
+
+                <button type="button" class="@confirmButtonClass" @onclick="RunConfirmAction">
+                    @confirmButtonText
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isEditModalOpen;
+    private string editType = "";
+    private int editId;
+    private string editName = "";
+    private string editModalTitle = "";
+    private string editModalSubtitle = "";
+    private string confirmButtonClass = "reject-btn";
+
+    private bool isAssignmentModalOpen;
+    private int editAssignmentId;
+    private AdminAssignSubjectDto editAssignmentForm = new();
+
+    private bool isConfirmModalOpen;
+    private string confirmTitle = "";
+    private string confirmMessage = "";
+    private string confirmButtonText = "Confirm";
+    private Func<Task>? confirmAction;
+
+    private DashboardDto dashboard = new();
+    private TeacherCreateDto teacherForm = new();
+    private StudentCreateDto studentForm = new() { AutoApprove = true };
+    private AdminAssignSubjectDto assignForm = new();
+
+    private List<UserDto> teachers = new();
+    private List<UserDto> students = new();
+    private List<UserDto> pendingStudents = new();
+    private List<SectionDto> sections = new();
+    private List<SubjectDto> subjects = new();
+    private List<TeacherAssignmentDto> teacherAssignments = new();
+
+    private string? errorMessage;
+    private string? successMessage;
+
+    private string newSubjectName = "";
+    private string newSectionName = "";
+
+    private bool isProcessingApproval;
+    private bool isCreatingSubject;
+    private bool isCreatingSection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AttachToken();
+        await LoadAll();
+    }
+
+    private async Task AttachToken()
+    {
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            Nav.NavigateTo("/login");
+            return;
+        }
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    private async Task LoadAll()
+    {
+        ClearMessages();
+
+        await LoadDashboard();
+        await LoadSections();
+        await LoadSubjects();
+        await LoadTeachers();
+        await LoadStudents();
+        await LoadPendingStudents();
+        await LoadTeacherAssignments();
+    }
+
+    private async Task LoadAllWithoutClearingMessages()
+    {
+        await LoadDashboard();
+        await LoadSections();
+        await LoadSubjects();
+        await LoadTeachers();
+        await LoadStudents();
+        await LoadPendingStudents();
+        await LoadTeacherAssignments();
+    }
+
+    private async Task LoadDashboard()
+    {
+        try
+        {
+            dashboard = await Http.GetFromJsonAsync<DashboardDto>("api/Dashboard/admin") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load dashboard.");
+        }
+    }
+
+    private async Task LoadSections()
+    {
+        try
+        {
+            sections = await Http.GetFromJsonAsync<List<SectionDto>>("api/Admin/sections") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load sections.");
+        }
+    }
+
+    private async Task LoadSubjects()
+    {
+        try
+        {
+            subjects = await Http.GetFromJsonAsync<List<SubjectDto>>("api/Admin/subjects") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load subjects.");
+        }
+    }
+
+    private async Task LoadTeachers()
+    {
+        try
+        {
+            teachers = await Http.GetFromJsonAsync<List<UserDto>>("api/Admin/teachers") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load teachers.");
+        }
+    }
+
+    private async Task LoadStudents()
+    {
+        try
+        {
+            students = await Http.GetFromJsonAsync<List<UserDto>>("api/Admin/students") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load students.");
+        }
+    }
+
+    private async Task LoadPendingStudents()
+    {
+        try
+        {
+            pendingStudents = await Http.GetFromJsonAsync<List<UserDto>>("api/Admin/pending-students") ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load pending students.");
+        }
+    }
+
+    private async Task LoadTeacherAssignments()
+    {
+        try
+        {
+            teacherAssignments = await Http.GetFromJsonAsync<List<TeacherAssignmentDto>>(
+                "api/Admin/teacher-assignments"
+            ) ?? new();
+        }
+        catch
+        {
+            await ShowError("Failed to load teacher assignments.");
+        }
+    }
+
+    private async Task CreateSubject()
+    {
+        ClearMessages();
+
+        newSubjectName = CleanName(newSubjectName);
+
+        if (string.IsNullOrWhiteSpace(newSubjectName))
+        {
+            await ShowError("Subject name is required.");
+            return;
+        }
+
+        if (subjects.Any(s => s.SubjectName.Equals(newSubjectName, StringComparison.OrdinalIgnoreCase)))
+        {
+            await ShowError("Subject already exists.");
+            return;
+        }
+
+        isCreatingSubject = true;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/Admin/subjects", new CreateSubjectDto
+            {
+                Name = newSubjectName
+            });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await ShowError(await ReadError(response, "Failed to create subject."));
+                return;
+            }
+
+            await ShowSuccess("Subject added successfully.");
+            newSubjectName = "";
+            await LoadSubjects();
+        }
+        finally
+        {
+            isCreatingSubject = false;
+        }
+    }
+
+    private async Task CreateSection()
+    {
+        ClearMessages();
+
+        newSectionName = CleanName(newSectionName);
+
+        if (string.IsNullOrWhiteSpace(newSectionName))
+        {
+            await ShowError("Section name is required.");
+            return;
+        }
+
+        if (sections.Any(s => s.Name.Equals(newSectionName, StringComparison.OrdinalIgnoreCase)))
+        {
+            await ShowError("Section already exists.");
+            return;
+        }
+
+        isCreatingSection = true;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/Admin/sections", new
+            {
+                Name = newSectionName
+            });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await ShowError(await ReadError(response, "Failed to create section."));
+                return;
+            }
+
+            await ShowSuccess("Section added successfully.");
+            newSectionName = "";
+            await LoadSections();
+        }
+        finally
+        {
+            isCreatingSection = false;
+        }
+    }
+
+    private void EditSection(SectionDto section)
+    {
+        editType = "section";
+        editId = section.Id;
+        editName = section.Name;
+        editModalTitle = "Edit Section";
+        editModalSubtitle = "Update the section name.";
+        isEditModalOpen = true;
+    }
+
+    private void EditSubject(SubjectDto subject)
+    {
+        editType = "subject";
+        editId = subject.Id;
+        editName = subject.SubjectName;
+        editModalTitle = "Edit Subject";
+        editModalSubtitle = "Update the subject name.";
+        isEditModalOpen = true;
+    }
+
+    private void CloseEditModal()
+    {
+        isEditModalOpen = false;
+        editType = "";
+        editId = 0;
+        editName = "";
+    }
+
+    private async Task SaveEditModal()
+    {
+        ClearMessages();
+
+        editName = CleanName(editName);
+
+        if (string.IsNullOrWhiteSpace(editName))
+        {
+            await ShowError("Name is required.");
+            return;
+        }
+
+        HttpResponseMessage response;
+
+        if (editType == "section")
+        {
+            response = await Http.PutAsJsonAsync($"api/Admin/sections/{editId}", new { name = editName });
+        }
+        else if (editType == "subject")
+        {
+            response = await Http.PutAsJsonAsync($"api/Admin/subjects/{editId}", new { name = editName });
+        }
+        else
+        {
+            await ShowError("Invalid edit type.");
+            return;
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ShowError(await ReadError(response, "Failed to update."));
+            return;
+        }
+
+        CloseEditModal();
+
+        await ShowSuccess("Updated successfully.");
+        await LoadAllWithoutClearingMessages();
+    }
+
+    private async Task AssignSubject()
+    {
+        ClearMessages();
+
+        if (assignForm.TeacherId <= 0)
+        {
+            await ShowError("Please select a teacher.");
+            return;
+        }
+
+        if (assignForm.SectionId <= 0)
+        {
+            await ShowError("Please select a section.");
+            return;
+        }
+
+        if (assignForm.SubjectId <= 0)
+        {
+            await ShowError("Please select a subject.");
+            return;
+        }
+
+        if (teacherAssignments.Any(x =>
+            x.TeacherId == assignForm.TeacherId &&
+            x.SectionId == assignForm.SectionId &&
+            x.SubjectId == assignForm.SubjectId))
+        {
+            await ShowError("This assignment already exists.");
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("api/Admin/assign-subject", assignForm);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ShowError(await ReadError(response, "Failed to assign subject."));
+            return;
+        }
+
+        assignForm = new AdminAssignSubjectDto();
+
+        await ShowSuccess("Subject assigned successfully.");
+        await LoadAllWithoutClearingMessages();
+    }
+
+    private void EditTeacherAssignment(TeacherAssignmentDto item)
+    {
+        editAssignmentId = item.Id;
+
+        editAssignmentForm = new AdminAssignSubjectDto
+        {
+            TeacherId = item.TeacherId,
+            SectionId = item.SectionId,
+            SubjectId = item.SubjectId
+        };
+
+        isAssignmentModalOpen = true;
+    }
+
+    private void CloseAssignmentModal()
+    {
+        isAssignmentModalOpen = false;
+        editAssignmentId = 0;
+        editAssignmentForm = new AdminAssignSubjectDto();
+    }
+
+    private async Task SaveTeacherAssignment()
+    {
+        ClearMessages();
+
+        if (editAssignmentId <= 0)
+        {
+            await ShowError("Invalid assignment.");
+            return;
+        }
+
+        if (editAssignmentForm.TeacherId <= 0 ||
+            editAssignmentForm.SectionId <= 0 ||
+            editAssignmentForm.SubjectId <= 0)
+        {
+            await ShowError("Teacher, section, and subject are required.");
+            return;
+        }
+
+        var response = await Http.PutAsJsonAsync(
+            $"api/Admin/teacher-assignments/{editAssignmentId}",
+            editAssignmentForm
+        );
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ShowError(await ReadError(response, "Failed to update assignment."));
+            return;
+        }
+
+        CloseAssignmentModal();
+
+        await ShowSuccess("Assignment updated successfully.");
+        await LoadAllWithoutClearingMessages();
+    }
+
+    private void RemoveTeacherAssignment(int id)
+    {
+        OpenConfirmModal(
+            "Remove Assignment",
+            "Are you sure you want to remove this teacher assignment?",
+            "Remove",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.DeleteAsync($"api/Admin/teacher-assignments/{id}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to remove assignment."));
+                    return;
+                }
+
+                await ShowSuccess("Assignment removed successfully.");
+                await LoadAllWithoutClearingMessages();
+            }
+        );
+    }
+
+    private void RemoveSubject(int subjectId)
+    {
+        OpenConfirmModal(
+            "Remove Subject",
+            "Are you sure you want to remove this subject?",
+            "Remove",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.DeleteAsync($"api/Admin/subjects/{subjectId}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to remove subject."));
+                    return;
+                }
+
+                await ShowSuccess("Subject removed successfully.");
+                await LoadAllWithoutClearingMessages();
+            }
+        );
+    }
+
+    private void RemoveSection(int sectionId)
+    {
+        OpenConfirmModal(
+            "Remove Section",
+            "Are you sure you want to remove this section?",
+            "Remove",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.DeleteAsync($"api/Admin/sections/{sectionId}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to remove section."));
+                    return;
+                }
+
+                await ShowSuccess("Section removed successfully.");
+                await LoadAllWithoutClearingMessages();
+            }
+        );
+    }
+
+    private async Task CreateTeacher()
+    {
+        ClearMessages();
+
+        teacherForm.FullName = CleanName(teacherForm.FullName);
+        teacherForm.Email = CleanEmail(teacherForm.Email);
+
+        if (string.IsNullOrWhiteSpace(teacherForm.FullName))
+        {
+            await ShowError("Teacher full name is required.");
+            return;
+        }
+
+        if (!IsValidEmail(teacherForm.Email))
+        {
+            await ShowError("Please enter a valid teacher email address.");
+            return;
+        }
+
+        if (IsDuplicateEmail(teacherForm.Email))
+        {
+            await ShowError("This email is already registered.");
+            return;
+        }
+
+        if (!IsValidPassword(teacherForm.Password))
+        {
+            await ShowError("Password must be at least 6 characters.");
+            return;
+        }
+
+        if (teacherForm.SectionId <= 0)
+        {
+            await ShowError("Please select a section for the teacher.");
+            return;
+        }
+
+        if (teacherForm.SubjectId <= 0)
+        {
+            await ShowError("Please select a subject for the teacher.");
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("api/Admin/teachers", teacherForm);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ShowError(await ReadError(response, "Failed to create teacher."));
+            return;
+        }
+
+        teacherForm = new TeacherCreateDto();
+
+        await ShowSuccess("Teacher created successfully.");
+        await LoadAllWithoutClearingMessages();
+    }
+
+    private async Task CreateStudent()
+    {
+        ClearMessages();
+
+        studentForm.FullName = CleanName(studentForm.FullName);
+        studentForm.Email = CleanEmail(studentForm.Email);
+        studentForm.StudentId = CleanStudentId(studentForm.StudentId);
+
+        if (string.IsNullOrWhiteSpace(studentForm.FullName))
+        {
+            await ShowError("Student full name is required.");
+            return;
+        }
+
+        if (!IsValidEmail(studentForm.Email))
+        {
+            await ShowError("Please enter a valid student email address.");
+            return;
+        }
+
+        if (IsDuplicateEmail(studentForm.Email))
+        {
+            await ShowError("This email is already registered.");
+            return;
+        }
+
+        if (!IsValidPassword(studentForm.Password))
+        {
+            await ShowError("Password must be at least 6 characters.");
+            return;
+        }
+
+        if (!IsFourDigitStudentId(studentForm.StudentId))
+        {
+            await ShowError("Student number must be exactly 4 digits. Example: 0001.");
+            return;
+        }
+
+        if (IsDuplicateStudentId(studentForm.StudentId))
+        {
+            await ShowError("This student number is already registered.");
+            return;
+        }
+
+        if (studentForm.SectionId <= 0)
+        {
+            await ShowError("Please select a section for the student.");
+            return;
+        }
+
+        if (studentForm.SubjectId <= 0)
+        {
+            await ShowError("Please select a subject for the student.");
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("api/Admin/students", studentForm);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await ShowError(await ReadError(response, "Failed to create student."));
+            return;
+        }
+
+        studentForm = new StudentCreateDto { AutoApprove = true };
+
+        await ShowSuccess("Student created and enrolled successfully.");
+        await LoadAllWithoutClearingMessages();
+    }
+
+    private async Task ApproveStudent(int studentId)
+    {
+        ClearMessages();
+
+        isProcessingApproval = true;
+
+        try
+        {
+            var response = await Http.PutAsync($"api/Admin/approve-student/{studentId}", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await ShowError(await ReadError(response, "Failed to approve student."));
+                return;
+            }
+
+            await ShowSuccess("Student approved successfully.");
+            await LoadAllWithoutClearingMessages();
+        }
+        finally
+        {
+            isProcessingApproval = false;
+        }
+    }
+
+    private async Task RejectStudent(int studentId)
+    {
+        ClearMessages();
+
+        isProcessingApproval = true;
+
+        try
+        {
+            var response = await Http.PutAsync($"api/Admin/reject-student/{studentId}", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await ShowError(await ReadError(response, "Failed to reject student."));
+                return;
+            }
+
+            await ShowSuccess("Student registration rejected.");
+            await LoadAllWithoutClearingMessages();
+        }
+        finally
+        {
+            isProcessingApproval = false;
+        }
+    }
+
+    private void RemoveTeacher(int teacherId)
+    {
+        OpenConfirmModal(
+            "Remove Teacher",
+            "Are you sure you want to remove this teacher account?",
+            "Remove",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.PutAsync($"api/Admin/teachers/{teacherId}/remove", null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to remove teacher."));
+                    return;
+                }
+
+                await ShowSuccess("Teacher removed successfully.");
+                await LoadAllWithoutClearingMessages();
+            }
+        );
+    }
+
+    private void DropStudent(int studentId)
+    {
+        OpenConfirmModal(
+            "Drop Student",
+            "Are you sure you want to drop this student?",
+            "Drop",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.PutAsync($"api/Admin/students/{studentId}/drop", null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to drop student."));
+                    return;
+                }
+
+                await ShowSuccess("Student dropped successfully.");
+                await LoadAllWithoutClearingMessages();
+            }
+        );
+    }
+
+    private void RestoreUser(int userId)
+    {
+        OpenConfirmModal(
+            "Restore Account",
+            "Are you sure you want to restore this account?",
+            "Restore",
+            async () =>
+            {
+                ClearMessages();
+
+                var response = await Http.PutAsync($"api/Admin/users/{userId}/restore", null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    await ShowError(await ReadError(response, "Failed to restore user."));
+                    return;
+                }
+
+                await ShowSuccess("Account restored successfully.");
+                await LoadAllWithoutClearingMessages();
+            },
+            "approve-btn"
+        );
+    }
+
+    private void OpenConfirmModal(
+        string title,
+        string message,
+        string buttonText,
+        Func<Task> action,
+        string buttonClass = "reject-btn")
+    {
+        confirmTitle = title;
+        confirmMessage = message;
+        confirmButtonText = buttonText;
+        confirmAction = action;
+        confirmButtonClass = buttonClass;
+        isConfirmModalOpen = true;
+    }
+
+    private void CloseConfirmModal()
+    {
+        isConfirmModalOpen = false;
+        confirmTitle = "";
+        confirmMessage = "";
+        confirmButtonText = "Confirm";
+        confirmButtonClass = "reject-btn";
+        confirmAction = null;
+    }
+
+    private async Task RunConfirmAction()
+    {
+        if (confirmAction == null)
+            return;
+
+        var action = confirmAction;
+
+        CloseConfirmModal();
+
+        await action();
+    }
+
+    private async Task ShowError(string message)
+    {
+        errorMessage = message;
+        successMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            await JS.InvokeVoidAsync("showToast", message, "error");
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task ShowSuccess(string message)
+    {
+        successMessage = message;
+        errorMessage = null;
+        StateHasChanged();
+
+        try
+        {
+            await JS.InvokeVoidAsync("showToast", message, "success");
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task<string> ReadError(HttpResponseMessage response, string fallback)
+    {
+        var body = await response.Content.ReadAsStringAsync();
+
+        return string.IsNullOrWhiteSpace(body)
+            ? fallback
+            : body;
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        return !string.IsNullOrWhiteSpace(email)
+            && Regex.IsMatch(email.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
+    }
+
+    private bool IsFourDigitStudentId(string? id)
+    {
+        id = CleanStudentId(id ?? "");
+        return id.Length == 4 && id.All(char.IsDigit);
+    }
+
+    private bool IsValidPassword(string password)
+    {
+        return !string.IsNullOrWhiteSpace(password)
+            && password.Trim().Length >= 6;
+    }
+
+    private bool IsDuplicateEmail(string email)
+    {
+        var cleanEmail = CleanEmail(email);
+
+        return teachers.Any(t => CleanEmail(t.Email) == cleanEmail)
+            || students.Any(s => CleanEmail(s.Email) == cleanEmail)
+            || pendingStudents.Any(p => CleanEmail(p.Email) == cleanEmail);
+    }
+
+    private bool IsDuplicateStudentId(string studentId)
+    {
+        var cleanId = CleanStudentId(studentId);
+
+        return students.Any(s => CleanStudentId(s.StudentId ?? "") == cleanId)
+            || pendingStudents.Any(p => CleanStudentId(p.StudentId ?? "") == cleanId);
+    }
+
+    private string CleanEmail(string? email)
+    {
+        return (email ?? "").Trim().ToLowerInvariant();
+    }
+
+    private string CleanName(string? name)
+    {
+        return Regex.Replace((name ?? "").Trim(), @"\s+", " ");
+    }
+
+    private string CleanStudentId(string? id)
+    {
+        return (id ?? "").Trim();
+    }
+
+    private string DisplayText(string? value, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
+
+    private string GetSubjectName(SubjectDto subject)
+    {
+        return string.IsNullOrWhiteSpace(subject.SubjectName)
+            ? "Unnamed Subject"
+            : subject.SubjectName;
+    }
+
+    private string GetTeacherAssignments(int teacherId)
+    {
+        var assigned = teacherAssignments
+            .Where(x => x.TeacherId == teacherId)
+            .Select(x => $"{x.SectionName} • {x.SubjectName}")
+            .ToList();
+
+        return assigned.Any()
+            ? string.Join(", ", assigned)
+            : "No assignment";
+    }
+
+    private string FormatStudentId(string? id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            return "-";
+
+        if (id.StartsWith("C24-"))
+            return id;
+
+        return $"C24-01-{id}-MAN121";
+    }
+
+    private async Task ScrollTo(string id)
+    {
+        await JS.InvokeVoidAsync(
+            "eval",
+            $"document.getElementById('{id}')?.scrollIntoView({{ behavior: 'smooth', block: 'start' }});"
+        );
+    }
+
+    private async Task Logout()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "token");
+        await JS.InvokeVoidAsync("localStorage.removeItem", "role");
+        await JS.InvokeVoidAsync("localStorage.removeItem", "userEmail");
+        await JS.InvokeVoidAsync("localStorage.removeItem", "userName");
+
+        Nav.NavigateTo("/login", true);
+    }
+
+    private void ClearMessages()
+    {
+        errorMessage = null;
+        successMessage = null;
+    }
+
+    public class DashboardDto
+    {
+        public int TotalStudents { get; set; }
+        public int TotalTeachers { get; set; }
+        public int TotalSessions { get; set; }
+    }
+
+    public class TeacherCreateDto
+    {
+        public string FullName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+        public int SectionId { get; set; }
+        public int SubjectId { get; set; }
+    }
+
+    public class StudentCreateDto
+    {
+        public string FullName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string StudentId { get; set; } = "";
+        public int SectionId { get; set; }
+        public int SubjectId { get; set; }
+        public bool AutoApprove { get; set; } = true;
+    }
+
+    public class AdminAssignSubjectDto
+    {
+        public int TeacherId { get; set; }
+        public int SectionId { get; set; }
+        public int SubjectId { get; set; }
+    }
+
+    public class CreateSubjectDto
+    {
+        public string Name { get; set; } = "";
+    }
+
+    public class SectionDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    public class SubjectDto
+    {
+        public int Id { get; set; }
+        public string SubjectName { get; set; } = "";
+    }
+
+    public class TeacherAssignmentDto
+    {
+        public int Id { get; set; }
+        public int TeacherId { get; set; }
+        public string TeacherName { get; set; } = "";
+        public int SectionId { get; set; }
+        public string SectionName { get; set; } = "";
+        public int SubjectId { get; set; }
+        public string SubjectName { get; set; } = "";
+    }
+
+    public class UserDto
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string? StudentId { get; set; }
+        public int? SectionId { get; set; }
+        public string? SectionName { get; set; }
+        public string? SubjectName { get; set; }
+        public string? TeacherName { get; set; }
+        public string? ApprovalStatus { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+}

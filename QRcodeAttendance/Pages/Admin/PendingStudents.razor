@@ -1,0 +1,98 @@
+﻿@page "/admin/pending-students"
+@using QRcodeAttendance.Models.Admin
+@using QRcodeAttendance.Services
+@inject AdminService AdminService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <MudPaper Class="pa-6" Elevation="4">
+        <MudText Typo="Typo.h5" Class="mb-4">Pending Students</MudText>
+
+        <MudTable Items="_students" Hover="true" Dense="true" Bordered="true">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Student ID</MudTh>
+                <MudTh>Section</MudTh>
+                <MudTh>Requested Subject</MudTh>
+                <MudTh>Teacher</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd>@context.FullName</MudTd>
+                <MudTd>@context.Email</MudTd>
+                <MudTd>@context.StudentId</MudTd>
+                <MudTd>@context.SectionName</MudTd>
+                <MudTd>@context.SubjectName</MudTd>
+                <MudTd>@context.TeacherName</MudTd>
+                <MudTd>
+                    <MudChip T="string" Color="Color.Warning">
+                        @context.ApprovalStatus
+                    </MudChip>
+                </MudTd>
+                <MudTd>
+                    <MudButton Size="Size.Small"
+                               Color="Color.Success"
+                               Variant="Variant.Filled"
+                               OnClick="@(() => Approve(context.Id))">
+                        Approve
+                    </MudButton>
+
+                    <MudButton Size="Size.Small"
+                               Color="Color.Error"
+                               Variant="Variant.Outlined"
+                               Class="ml-2"
+                               OnClick="@(() => Reject(context.Id))">
+                        Reject
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<AdminStudentModel> _students = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStudents();
+    }
+
+    private async Task LoadStudents()
+    {
+        _students = await AdminService.GetPendingStudentsAsync();
+    }
+
+    private async Task Approve(int userId)
+    {
+        var response = await AdminService.ApproveStudentAsync(userId);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Student approved and enrolled.", Severity.Success);
+            await LoadStudents();
+        }
+        else
+        {
+            Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+        }
+    }
+
+    private async Task Reject(int userId)
+    {
+        var response = await AdminService.RejectStudentAsync(userId);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Student rejected.", Severity.Success);
+            await LoadStudents();
+        }
+        else
+        {
+            Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Error);
+        }
+    }
+}

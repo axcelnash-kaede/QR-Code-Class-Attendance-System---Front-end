@@ -1,0 +1,103 @@
+﻿.pending-page {
+    min-height: 100vh;
+    width: 100%;
+    padding: 24px;
+    background: linear-gradient(135deg, #eaf3ff 0%, #d7e9ff 45%, #c9defc 100%);
+}
+
+.pending-card {
+    max-width: 1250px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #dbe7f5;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+.pending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+    .pending-header h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 900;
+        color: #123b82;
+    }
+
+    .pending-header p {
+        margin: 6px 0 0;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+.pending-empty {
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-weight: 700;
+    background: #f8fbff;
+    border: 2px dashed #dbe7f5;
+    border-radius: 20px;
+}
+
+.pending-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pending-back {
+    margin-top: 18px !important;
+    font-weight: 800 !important;
+    text-transform: none !important;
+}
+
+.pending-refresh {
+    height: 44px;
+    border-radius: 14px !important;
+    font-weight: 800 !important;
+    text-transform: none !important;
+}
+
+.pending-table-card {
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid #e2ebf7;
+}
+
+    .pending-table-card .mud-table th {
+        background: linear-gradient(180deg, #eff6ff 0%, #e0edff 100%) !important;
+        color: #123b82 !important;
+        font-weight: 900 !important;
+        padding: 16px !important;
+    }
+
+    .pending-table-card .mud-table td {
+        padding: 14px 16px !important;
+    }
+
+.approve-btn,
+.reject-btn {
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    text-transform: none !important;
+}
+
+@media (max-width: 800px) {
+    .pending-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pending-card {
+        padding: 18px;
+    }
+}

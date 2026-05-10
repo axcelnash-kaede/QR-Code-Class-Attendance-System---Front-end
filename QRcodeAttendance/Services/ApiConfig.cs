@@ -2,6 +2,6 @@
 {
     public static class ApiConfig
     {
-        public static string BaseUrl = "http://10.116.59.229:5041";
+        public const string BaseUrl = "http://10.207.25.229:5041";
     }
 }

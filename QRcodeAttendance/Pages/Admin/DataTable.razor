@@ -1,0 +1,21 @@
+﻿<section id="@Id" class="glass-card table-card-pro">
+    <div class="table-header-pro">
+        <div>
+            <h2>@Title</h2>
+            <p>@Subtitle</p>
+        </div>
+        <button class="outline-action" @onclick="OnRefresh">Refresh</button>
+    </div>
+
+    <div class="table-wrap-pro">
+        @ChildContent
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Id { get; set; } = "";
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Subtitle { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnRefresh { get; set; }
+}

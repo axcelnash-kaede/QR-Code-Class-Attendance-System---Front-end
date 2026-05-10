@@ -4,15 +4,31 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>QRcodeAttendance</title>
+
     <base href="/" />
+
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+
+    <!-- BOOTSTRAP + MUD FIRST -->
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+    <!-- CUSTOM CSS AFTER MUD -->
     <link rel="stylesheet" href="css/app.css" />
     <link rel="stylesheet" href="css/login.css" />
     <link rel="stylesheet" href="css/register.css" />
     <link rel="stylesheet" href="css/main_dashboard.css" />
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/admin.css" />
+    <link rel="stylesheet" href="css/pending_students.css" />
+    <link rel="stylesheet" href="css/forgot_password.css" />
+
+    <!-- ICON -->
     <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- APP -->
     <link href="QRcodeAttendance.styles.css" rel="stylesheet" />
 </head>
 
@@ -22,6 +38,7 @@
             <circle r="40%" cx="50%" cy="50%" />
             <circle r="40%" cx="50%" cy="50%" />
         </svg>
+
         <div class="loading-progress-text"></div>
     </div>
 
@@ -30,8 +47,11 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.webassembly.js"></script>
+
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/site.js?v=21"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
 </body>
 
 </html>

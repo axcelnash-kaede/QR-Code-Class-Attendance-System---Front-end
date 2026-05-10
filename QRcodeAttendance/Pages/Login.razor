@@ -6,10 +6,9 @@
 @inject ISnackbar Snackbar
 @using MudBlazor
 @using System.Net.Http.Json
-@using QRcodeAttendance.Services  
+@using QRcodeAttendance.Services
 
 <div class="auth-page @(isLeaving ? "success-leave" : "")">
-
     <div class="login-shell">
 
         <div class="login-brand-panel">
@@ -38,14 +37,13 @@
                     <div class="mini-card-text">Track sections, sessions, and attendance logs efficiently.</div>
                 </div>
             </div>
-
         </div>
 
         <div class="login-form-panel">
             <div class="form-card">
                 <div class="form-header">
-                    <div class="form-title">Sign in</div>
-                    <div class="form-subtitle">Use your teacher account credentials to continue.</div>
+                    <div class="form-title">LOG IN</div>
+                    <div class="form-subtitle">Use your admin or teacher account credentials to continue.</div>
                 </div>
 
                 <MudForm @ref="form" Immediate="true">
@@ -59,8 +57,8 @@
                                       Required="true"
                                       RequiredError="Email is required"
                                       Validation="@(new Func<string, string>(ValidateEmail))"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Person" />
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Email" />
 
                         <MudTextField T="string"
                                       Placeholder="Password"
@@ -70,34 +68,58 @@
                                       FullWidth="true"
                                       Required="true"
                                       RequiredError="Password is required"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Lock"
-                                      AdornmentEnd="Adornment.End"
-                                      AdornmentIconEnd="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
-                                      OnAdornmentEndClick="@(() => showPassword = !showPassword)" />
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@(showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)"
+                                      OnAdornmentClick="TogglePassword" />
 
                     </div>
                 </MudForm>
 
-                <div class="btn-group">
-                    <MudButton OnClick="HandleLogin"
-                               Variant="Variant.Filled"
-                               FullWidth="true"
-                               Disabled="@(isLoading || isLeaving)"
-                               Class="login-btn">
-                        @(isLoading ? "SIGNING IN..." : "SIGN IN")
-                    </MudButton>
-                </div>
+               <div class="btn-group">
+
+    <MudButton OnClick="HandleLogin"
+               Variant="Variant.Filled"
+               FullWidth="true"
+               Disabled="@(isLoading || isLeaving)"
+               Class="login-btn">
+
+        @if (isLoading)
+        {
+            <MudProgressCircular Size="Size.Small"
+                                 Indeterminate="true"
+                                 Class="login-spinner" />
+
+            <span>LOGGING IN...</span>
+        }
+        else
+        {
+            <span>LOG IN</span>
+        }
+
+    </MudButton>
+
+    <div class="forgot-password-wrapper">
+
+        <MudButton Variant="Variant.Text"
+                   Class="forgot-password-btn"
+                   OnClick="@(() => nav.NavigateTo("/forgot-password"))">
+
+            Forgot Password?
+
+        </MudButton>
+
+    </div>
+
+</div>
 
                 <div class="form-footer">
                     <div class="footer-note">Teacher accounts are created and maintained by the administrator.</div>
-                    <div class="footer-version">QR Attendance System • Web Teacher Access</div>
+                    <div class="footer-version">QR Attendance System • Web Access</div>
                 </div>
             </div>
         </div>
 
     </div>
-
 </div>
 
 @code {
@@ -105,9 +127,9 @@
     private bool isLoading = false;
     private bool isLeaving = false;
 
-    private MudForm form;
-    private string email;
-    private string password;
+    private MudForm? form;
+    private string email = "";
+    private string password = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,12 +142,27 @@
         Snackbar.Configuration.ShowTransitionDuration = 180;
 
         var existingToken = await JS.InvokeAsync<string>("localStorage.getItem", "token");
+        var existingRole = await JS.InvokeAsync<string>("localStorage.getItem", "role");
 
         if (!string.IsNullOrWhiteSpace(existingToken))
-            nav.NavigateTo("/main_dashboard");
+        {
+            if (existingRole == "Admin")
+            {
+                nav.NavigateTo("/admin_dashboard");
+            }
+            else if (existingRole == "Teacher")
+            {
+                nav.NavigateTo("/main_dashboard");
+            }
+        }
     }
 
-    private string ValidateEmail(string value)
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
+
+    private string? ValidateEmail(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return "Email is required";
@@ -143,6 +180,9 @@
 
     private async Task HandleLogin()
     {
+        if (form is null)
+            return;
+
         await form.Validate();
 
         if (!form.IsValid)
@@ -154,7 +194,7 @@
         isLoading = true;
         StateHasChanged();
 
-        var cleanEmail = email?.Trim();
+        var cleanEmail = email.Trim();
 
         var data = new
         {
@@ -173,19 +213,43 @@
                 if (result != null && !string.IsNullOrWhiteSpace(result.token))
                 {
                     await JS.InvokeVoidAsync("localStorage.setItem", "token", result.token);
-                    await JS.InvokeVoidAsync("localStorage.setItem", "userEmail", cleanEmail ?? "");
+                    await JS.InvokeVoidAsync("localStorage.setItem", "role", result.role ?? "");
+                    await JS.InvokeVoidAsync("localStorage.setItem", "userEmail", cleanEmail);
+                    await JS.InvokeVoidAsync("localStorage.setItem", "userName", result.name ?? "");
 
-                    Snackbar.Add(
-                        string.IsNullOrWhiteSpace(result.message) ? "Login successful!" : result.message,
-                        Severity.Success
-                    );
+                    Snackbar.Add("Login successful!", Severity.Success);
 
                     isLoading = false;
                     isLeaving = true;
                     StateHasChanged();
 
                     await Task.Delay(350);
-                    nav.NavigateTo("/main_dashboard");
+
+                    if (result.role == "Admin")
+                    {
+                        nav.NavigateTo("/admin_dashboard");
+                    }
+                    else if (result.role == "Teacher")
+                    {
+                        nav.NavigateTo("/main_dashboard");
+                    }
+                    else if (result.role == "Student")
+                    {
+                        Snackbar.Add("Students should use the mobile app.", Severity.Warning);
+
+                        await JS.InvokeVoidAsync("localStorage.removeItem", "token");
+                        await JS.InvokeVoidAsync("localStorage.removeItem", "role");
+                        await JS.InvokeVoidAsync("localStorage.removeItem", "userEmail");
+
+                        isLeaving = false;
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        Snackbar.Add("Unknown user role. Please contact the administrator.", Severity.Error);
+                        isLeaving = false;
+                        StateHasChanged();
+                    }
                 }
                 else
                 {
@@ -214,7 +278,9 @@
 
     public class LoginResponse
     {
-        public string token { get; set; }
-        public string message { get; set; }
+        public string token { get; set; } = "";
+        public string role { get; set; } = "";
+        public string name { get; set; } = "";
+        public string message { get; set; } = "";
     }
 }

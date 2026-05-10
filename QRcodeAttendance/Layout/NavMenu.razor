@@ -9,21 +9,46 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span>
+                Dashboard
             </NavLink>
         </div>
+
+        <div class="nav-item px-3 mt-3 text-white-50 small">
+            ADMIN PANEL
+        </div>
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="admin/create-teacher">
+                <span class="bi bi-person-plus-fill" aria-hidden="true"></span>
+                Create Teacher
             </NavLink>
         </div>
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            <NavLink class="nav-link" href="admin/create-student">
+                <span class="bi bi-person-fill-add" aria-hidden="true"></span>
+                Create Student
             </NavLink>
         </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="admin/pending-students">
+                <span class="bi bi-hourglass-split" aria-hidden="true"></span>
+                Pending Students
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="admin/students">
+                <span class="bi bi-people-fill" aria-hidden="true"></span>
+                Students
+            </NavLink>
+        </div>
+
     </nav>
 </div>
 

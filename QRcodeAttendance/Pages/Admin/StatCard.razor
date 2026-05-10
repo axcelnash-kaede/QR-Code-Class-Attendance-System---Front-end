@@ -1,0 +1,11 @@
+﻿<div class="stat-card-pro">
+    <div class="stat-icon">@Icon</div>
+    <span>@Title</span>
+    <strong>@Value</strong>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public int Value { get; set; }
+    [Parameter] public string Icon { get; set; } = "";
+}

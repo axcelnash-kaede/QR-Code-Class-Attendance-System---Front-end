@@ -1,0 +1,120 @@
+﻿@page "/admin/create-student"
+@using QRcodeAttendance.Models.Admin
+@using QRcodeAttendance.Services
+@using MudBlazor
+@inject AdminService AdminService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+    <MudPaper Class="pa-6" Elevation="4">
+        <MudText Typo="Typo.h5" Class="mb-4">Create Student</MudText>
+
+        <MudForm @ref="_form">
+            <MudTextField Label="Full Name"
+                          @bind-Value="_model.FullName"
+                          Required="true" />
+
+            <MudTextField Label="Email"
+                          @bind-Value="_model.Email"
+                          InputType="InputType.Email"
+                          Required="true" />
+
+            <MudTextField Label="Password"
+                          @bind-Value="_model.Password"
+                          InputType="InputType.Password"
+                          Required="true" />
+
+            <MudTextField Label="Student Number"
+                          HelperText="Enter only 4 digits. Example: 0009"
+                          @bind-Value="_model.StudentId"
+                          MaxLength="4"
+                          Required="true" />
+
+            <MudSelect T="int"
+                       Label="Section"
+                       @bind-Value="_model.SectionId"
+                       Required="true"
+                       Class="mt-3">
+                @foreach (var sec in _sections)
+                {
+                    <MudSelectItem T="int" Value="@sec.Id">@sec.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int"
+                       Label="Subject / Teacher"
+                       @bind-Value="_model.SubjectId"
+                       Required="true"
+                       Class="mt-3">
+                @foreach (var subject in FilteredSubjects)
+                {
+                    <MudSelectItem T="int" Value="@subject.SubjectId">
+                        @subject.SubjectName - @DisplayText(subject.TeacherName, "No Teacher")
+                    </MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSwitch T="bool"
+                       Label="Auto approve and enroll student"
+                       @bind-Checked="_model.AutoApprove"
+                       Color="Color.Success"
+                       Class="mt-3" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Class="mt-5"
+                       OnClick="@SubmitCreateStudent">
+                Create Student
+            </MudButton>
+        </MudForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm? _form;
+    private AdminStudentCreateModel _model = new();
+    private List<SectionModel> _sections = new();
+    private List<SubjectModel> _subjects = new();
+
+    private IEnumerable<SubjectModel> FilteredSubjects =>
+        _model.SectionId <= 0
+            ? _subjects
+            : _subjects.Where(s => s.SectionId == _model.SectionId);
+
+    protected override async Task OnInitializedAsync()
+    {
+        _sections = await AdminService.GetSectionsAsync();
+        _subjects = await AdminService.GetSubjectsAsync();
+    }
+
+    private string DisplayText(string? value, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
+
+    private async Task SubmitCreateStudent()
+    {
+        if (_form is null)
+            return;
+
+        await _form.Validate();
+
+        if (!_form.IsValid)
+            return;
+
+        var response = await AdminService.CreateStudentAsync(_model);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Student created successfully.", Severity.Success);
+
+            _model = new AdminStudentCreateModel();
+            await _form.ResetAsync();
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            Snackbar.Add(string.IsNullOrWhiteSpace(error) ? "Failed to create student." : error, Severity.Error);
+        }
+    }
+}

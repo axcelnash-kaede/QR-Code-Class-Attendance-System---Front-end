@@ -1,0 +1,37 @@
+﻿@page "/admin/students"
+@using QRcodeAttendance.Models.Admin
+@using QRcodeAttendance.Services
+@inject AdminService AdminService
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <MudPaper Class="pa-6" Elevation="4">
+        <MudText Typo="Typo.h5" Class="mb-4">All Students</MudText>
+
+        <MudTable Items="_students" Hover="true" Dense="true" Bordered="true">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Email</MudTh>
+                <MudTh>Student ID</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Requested Subject ID</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd>@context.FullName</MudTd>
+                <MudTd>@context.Email</MudTd>
+                <MudTd>@context.StudentId</MudTd>
+                <MudTd>@context.ApprovalStatus</MudTd>
+                <MudTd>@context.RequestedSubjectId</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<AdminStudentModel> _students = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _students = await AdminService.GetStudentsAsync();
+    }
+}

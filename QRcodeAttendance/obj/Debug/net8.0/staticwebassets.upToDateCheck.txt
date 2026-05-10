@@ -1,12 +1,16 @@
 wwwroot\aclc.png
 wwwroot\aclclogo.webp
+wwwroot\css\admin.css
 wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
+wwwroot\css\forgot_password.css
 wwwroot\css\login.css
 wwwroot\css\main_dashboard.css
+wwwroot\css\pending_students.css
 wwwroot\css\register.css
 wwwroot\favicon.png
 wwwroot\icon-192.png
 wwwroot\index.html
+wwwroot\js\site.js
 wwwroot\sample-data\weather.json
